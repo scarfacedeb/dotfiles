@@ -1,0 +1,62 @@
+#!/usr/bin/env zsh
+#
+# ZPlug + custom scripts
+
+# Profile
+# zmodload zsh/zprof
+
+# load zplug if it doesn't exist
+source ~/.zplug/init.zsh
+
+# Manage zplug via zplug
+# zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
+zplug "~/.zsh.d", from:local, use:"init.zsh"
+
+# zplug "chrissicool/zsh-256color"
+# zplug "zsh-users/zsh-history-substring-search"
+zplug "zdharma/fast-syntax-highlighting", defer:2
+#zplug "zsh-users/zsh-autosuggestions", defer:3
+
+zplug "agkozak/zsh-z"  # 0.1
+# zplug "Tarrasch/zsh-bd" # Go back bd
+# zplug "supercrabtree/k" # Better ls
+
+# zplug "RobertAudi/tsm" # tmux session manager
+
+# Version manager
+zplug "asdf-vm/asdf", use:"asdf.sh"
+
+# FZF for history and directories
+# zplug "junegunn/fzf", as:command, \
+#   hook-build:"./install --bin", \
+#   use:"bin/{fzf-tmux,fzf}"
+
+# # # Actually install plugins, prompt user input # 0.2
+# if ! zplug check --verbose; then
+#     printf "Install zplug plugins? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     fi
+# fi
+
+zplug load
+
+source ~/.fzf.zsh
+
+# Add gcloud to PATH
+source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+
+# Add cw-cli/bin to PATH
+source "$HOME/projects/cw-cli/path.zsh.inc"
+
+# DEPRECATED, replaced by asdf
+# export PATH="$PATH:$HOME/.rvm/bin"
+# source "$HOME/.rvm/scripts/rvm"
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Enable iTerm integration
+# See: https://iterm2.com/shell_integration.html
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
