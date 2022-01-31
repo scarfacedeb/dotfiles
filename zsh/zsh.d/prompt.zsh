@@ -42,13 +42,13 @@
 #     _p_divider $2 $3
 # }
 
-## text background divider_bg
-_p_git(){
-    git rev-parse --abbrev-ref HEAD > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-      git rev-parse --abbrev-ref HEAD | tr -d '\n'
-    fi
-}
+# ## text background divider_bg
+# _p_git(){
+#     git rev-parse --abbrev-ref HEAD > /dev/null 2>&1
+#     if [ $? -eq 0 ]; then
+#       git rev-parse --abbrev-ref HEAD | tr -d '\n'
+#     fi
+# }
 
 # _p_git_color(){
 #     git diff --name-only > /dev/null 2>&1
@@ -78,5 +78,7 @@ _p_git(){
 
 # setopt PROMPT_SUBST
 
-PROMPT='%~ %# '
-RPROMPT='$(_p_git) %D{%d/%m/%Y %H:%M:%S}'
+# PROMPT='%~ %# '
+# PROMPT='%~ $(_p_git) %D{%d/%m/%Y %H:%M:%S} %# '
+# PROMPT='%(4~|.../%3~|%~) [%D{%d/%m/%Y %H:%M}] '
+PROMPT='%F{blue}%(4~|.../%3~|%~) %F{grey}[%D{%H:%M}]%F{white}> '

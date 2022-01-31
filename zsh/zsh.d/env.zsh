@@ -6,6 +6,8 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 
+ulimit -n 10240
+
 # ========== EDITOR/PAGER/etc ============
 
 export EDITOR='vim'
@@ -25,23 +27,21 @@ export BAT_THEME=base16
 # Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
 # Remove -X and -F (exit if the content fits on one screen) to enable it.
 # -j.5 to position search in the center
-export LESS='-F -g -i -M -R -S -w -X -z-4 -j.3'
+export LESS='-F -i -M -R -S -w -X -z-4 -j.3'
 
 # Highlight section titles in manual pages
 export LESS_TERMCAP_md="${yellow}"
 
 # Set the Less input preprocessor.
 # Try both `lesspipe` and `lesspipe.sh` as either might exist on a system.
-if (( $#commands[(i)lesspipe(|.sh)] )); then
-  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
-fi
+# if (( $#commands[(i)lesspipe(|.sh)] )); then
+#   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
+# fi
 
 # Always enable colored `grep` output
 export GREP_OPTIONS="--color=auto"
 
-# Disable case sensitivity, score begin matches higher
-# export FZF_DEFAULT_OPTS="-i --tiebreak=begin" 
-export FZF_DEFAULT_OPTS="--layout=reverse"
+# See FZF vars in ./fzf.zsh
 
 
 # ========== History ============

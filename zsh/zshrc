@@ -15,17 +15,21 @@ zplug "~/.zsh.d", from:local, use:"init.zsh"
 
 # zplug "chrissicool/zsh-256color"
 # zplug "zsh-users/zsh-history-substring-search"
-zplug "zdharma/fast-syntax-highlighting", defer:2
+zplug "zdharma-continuum/fast-syntax-highlighting", defer:2
 #zplug "zsh-users/zsh-autosuggestions", defer:3
 
 zplug "agkozak/zsh-z"  # 0.1
 # zplug "Tarrasch/zsh-bd" # Go back bd
 # zplug "supercrabtree/k" # Better ls
 
+zplug "paulirish/git-open", as:plugin
+
 # zplug "RobertAudi/tsm" # tmux session manager
 
 # Version manager
-zplug "asdf-vm/asdf", use:"asdf.sh"
+# zplug "asdf-vm/asdf", use:"asdf.sh"
+
+# zplug "postmodern/chruby", use:""
 
 # FZF for history and directories
 # zplug "junegunn/fzf", as:command, \
@@ -36,19 +40,26 @@ zplug "asdf-vm/asdf", use:"asdf.sh"
 # if ! zplug check --verbose; then
 #     printf "Install zplug plugins? [y/N]: "
 #     if read -q; then
-#         echo; zplug install
+#; zplug install
 #     fi
 # fi
 
 zplug load
 
-source ~/.fzf.zsh
+# Add version managers
+# . /usr/local/opt/asdf/libexec/asdf.sh
+. /usr/local/opt/chruby/share/chruby/chruby.sh
+. /usr/local/opt/chruby/share/chruby/auto.sh
+
+# Add FZF
+. ~/.fzf.zsh
+# source ~/.config/broot/launcher/bash/br
 
 # Add gcloud to PATH
-source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+. "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 
 # Add cw-cli/bin to PATH
-source "$HOME/projects/cw-cli/path.zsh.inc"
+. "$HOME/projects/cw-cli/path.zsh.inc"
 
 # DEPRECATED, replaced by asdf
 # export PATH="$PATH:$HOME/.rvm/bin"

@@ -70,9 +70,8 @@ alias ssh_key="cat ~/.ssh/id_rsa.pub | pbcopy"
 #   alias "$method"="curl -X $method"
 # done
 
-alias copypass="lpass show -c --password -G "
-
 alias file_server="python3 -m http.server 8888"
+alias tp="telepresence"
 
 ######################################################
 #                       OTHER                        #
@@ -105,6 +104,10 @@ alias restart_postgres='rm /usr/local/var/postgres/postmaster.pid; brew services
 ######################################################
 
 alias kb=kubectl
+
+######################################################
+#                       MISC                         #
+######################################################
 
 
 # Interactive move

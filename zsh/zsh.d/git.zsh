@@ -46,6 +46,9 @@ alias grh='git reset HEAD'
 alias gd='git diff'
 alias gds='git diff --staged'
 
+# Git diff after rebase
+alias grbd='git range-diff @{u} @{1} @' 
+
 # Log (log)
 alias glog="git log -M --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %C(bold cyan)%cd %Cgreen(%cr)%Creset' --abbrev-commit --date=short"
 alias gloga="git log -M --all --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %C(bold cyan)%cd %Cgreen(%cr)%Creset' --abbrev-commit --date=short"
