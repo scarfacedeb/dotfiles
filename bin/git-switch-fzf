@@ -1,0 +1,6 @@
+#!/bin/bash
+# Git Switch Fzf
+# 
+# https://koenwoortman.com/git-faster-branch-checkouts-with-fzf/
+
+git switch $(git for-each-ref refs/heads/ --format='%(refname:short)' | fzf)
