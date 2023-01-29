@@ -46,6 +46,9 @@ export GREP_OPTIONS="--color=auto"
 
 # See FZF vars in ./fzf.zsh
 
+# Use ruby for fx json-viewer reducers
+export FX_LANG=ruby
+
 
 # ========== History ============
 

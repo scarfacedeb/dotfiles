@@ -1,0 +1,10 @@
+tap "datawire/blackbird"
+tap "tilt-dev/tap"
+
+brew "datawire/blackbird/telepresence-legacy"
+brew "tilt"
+
+brew "detect-secrets"
+brew "mysql-client", link: true
+
+cask "google-cloud-sdk"
