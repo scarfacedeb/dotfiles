@@ -50,6 +50,7 @@ brew "tldr"
 
 brew "git"
 brew "git-fixup"
+brew "git-secret"
 brew "chruby"
 brew "ruby-install"
 brew "python"
