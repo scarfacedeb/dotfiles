@@ -24,3 +24,8 @@ cat ~/.ssh/id_rsa.pub | pbcopy
 git clone git@github.com:scarfacedeb/dotfiles.git ~/.dotfiles && cd ~/.dotfiles
 ./install
 ```
+
+
+### Secrets
+
+Git-secrets are used to store some sensitive data. Read [more](https://www.pascallandau.com/blog/git-secret-encrypt-repository-docker/#export-list-and-import-private-gpg-keys).
