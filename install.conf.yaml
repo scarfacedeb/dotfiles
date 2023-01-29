@@ -16,7 +16,7 @@
     ~/.zshrc: zsh/zshrc
     ~/.zsh.d: zsh/zsh.d
     ~/.zsh.d/git.zsh: git/aliases.zsh
-    ~/.zsh.d/catawiki.zsh: cw/aliases.zsh
+    ~/.zsh.d/catawiki.zsh: cw/aliases.sh
     ~/.tmux.conf: zsh/tmux.conf
     ~/.config/kitty: zsh/kitty
 
