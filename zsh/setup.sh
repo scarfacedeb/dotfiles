@@ -5,5 +5,9 @@ if [ ! -d ~/.zplug ]; then
   curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
 
+echo "Installing zplug deps"
 . ~/.zplug/init.zsh
 zplug install
+
+echo "Installing fzf"
+$(brew --prefix)/opt/fzf/install --all

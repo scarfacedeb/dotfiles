@@ -52,5 +52,5 @@ export BREW_PREFIX=$(brew --prefix)
 . $BREW_PREFIX/opt/chruby/share/chruby/auto.sh
 
 # Add FZF
-. ~/.fzf.zsh
+[ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
 # source ~/.config/broot/launcher/bash/br
