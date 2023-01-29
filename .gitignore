@@ -6,3 +6,4 @@ zsh/zsh.d/git.zsh
 zsh/zsh.d/catawiki.zsh
 cw/aliases.sh
 cw/setup.sh
+cw/bin/brian
