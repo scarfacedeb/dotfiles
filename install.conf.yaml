@@ -1,41 +1,41 @@
 - defaults:
-  link:
-    create: true
-    relink: true
+    link:
+        create: true
+        relink: true
 
 - clean: ['~']
 
 - link:
-  ~/.gitconfig: git/gitconfig
-  ~/.gitignore_global: git/gitignore_global
-  ~/.ssh/config: zsh/ssh_config
+    ~/.gitconfig: git/gitconfig
+    ~/.gitignore_global: git/gitignore_global
+    ~/.ssh/config: zsh/ssh_config
 
-  ~/.zshrc: zsh/zshrc
-  ~/.zsh.d: zsh/zsh.d
-  ~/.zsh.d/git.zsh: git/aliases.zsh
-  ~/.zsh.d/catawiki.zsh: cw/aliases.zsh
-  ~/.tmux.conf: zsh/tmux.conf
-  ~/.config/kitty: zsh/kitty
+    ~/.zshrc: zsh/zshrc
+    ~/.zsh.d: zsh/zsh.d
+    ~/.zsh.d/git.zsh: git/aliases.zsh
+    ~/.zsh.d/catawiki.zsh: cw/aliases.zsh
+    ~/.tmux.conf: zsh/tmux.conf
+    ~/.config/kitty: zsh/kitty
 
-  ~/.config/nvim/init.lua: vim/init.lua
-  ~/.config/nvim/lua: vim/lua
+    ~/.config/nvim/init.lua: vim/init.lua
+    ~/.config/nvim/lua: vim/lua
 
-  ~/.ruby-version: ruby/ruby-version
-  ~/.bundle/config: ruby/bundle_config
-  ~/.rubocop: ruby/rubocop.yml
+    ~/.ruby-version: ruby/ruby-version
+    ~/.bundle/config: ruby/bundle_config
+    ~/.rubocop: ruby/rubocop.yml
 
-  ~/.hammerspoon: macos/hammerspoon
+    ~/.hammerspoon: macos/hammerspoon
 
 - create:
-  - ~/.git-templates
-  - ~/.cache/nvim/sessions
-  - ~/.cache/nvim/backup
-  - ~/.cache/nvim/swap
-  - ~/.cache/nvim/undo
+    - ~/.git-templates
+    - ~/.cache/nvim/sessions
+    - ~/.cache/nvim/backup
+    - ~/.cache/nvim/swap
+    - ~/.cache/nvim/undo
 
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
-  - setup.sh
-  - zsh/setup.sh
-  - ruby/setup.sh
-  - cw/setup.sh
+    - [git submodule update --init --recursive, Installing submodules]
+    - setup.sh
+    - zsh/setup.sh
+    - ruby/setup.sh
+    - cw/setup.sh
