@@ -17,6 +17,10 @@
   ~/.config/nvim/init.lua: vim/init.lua
   ~/.config/nvim/lua: vim/lua
 
+  ~/.ruby-version: ruby/ruby-version
+  ~/.bundle/config: ruby/bundle_config
+  ~/.rubocop: ruby/rubocop.yml
+
 - create:
   - ~/.git-templates
   - ~/.cache/nvim/sessions
@@ -26,3 +30,4 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - ruby/setup.sh
