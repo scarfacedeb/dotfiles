@@ -1,3 +1,7 @@
 cw/
 .gitsecret/keys/random_seed
 !*.secret
+Brewfile.lock.json
+
+zsh/zsh.d/git.zsh
+zsh/zsh.d/catawiki.zsh

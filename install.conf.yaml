@@ -2,6 +2,9 @@
     link:
         create: true
         relink: true
+    shell:
+        stdout: true
+        stderr: true
 
 - clean: ['~']
 
@@ -35,7 +38,7 @@
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
-    - setup.sh
     - zsh/setup.sh
+    - vim/setup.sh
     - ruby/setup.sh
     - cw/setup.sh
