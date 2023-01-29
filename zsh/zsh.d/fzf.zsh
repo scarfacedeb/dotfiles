@@ -7,7 +7,7 @@
 export FZF_DEFAULT_OPTS="-i --tiebreak=begin --layout=reverse"
 
 # Replace default /** trigger to trigger on `<path>//<TAB>`
-export FZF_COMPLETION_TRIGGER='/'
+export FZF_COMPLETION_TRIGGER='//'
 
 # Options to fzf command
 # export FZF_COMPLETION_OPTS='--border --info=inline'

@@ -19,9 +19,12 @@ alias vim="nvim"
 
 alias difff="diff-so-fancy"
 
-alias tx="tmux"
-alias txl="tmux list-sessions"
-alias txa="tmux attach -t "
+alias tailf="tail -f"
+alias taillog="tail -f log/development.log"
+
+# alias tx="tmux"
+# alias txl="tmux list-sessions"
+# alias txa="tmux attach -t "
 
 ######################################################
 #              FILES/DIRS MANIPULATION               #
@@ -82,6 +85,9 @@ alias service='brew services'
 
 alias be='bundle exec'
 alias rspec='bundle exec rspec'
+alias tilt='/usr/local/bin/tilt'
+
+alias pss='ps aux | grep '
 
 # Stopwatch
 # Source: https://github.com/mathiasbynens/dotfiles
@@ -127,10 +133,10 @@ f() {
     find . -name "$1"
 }
 
-# Mosh + Tmux combo
-# Source: https://github.com/mobile-shell/mosh/issues/394#issuecomment-215987982
+# Kitty ssh
+# mosh "$@" -- tmux new -As mosh-session
 ssht () {
-  mosh "$@" -- tmux new -As mosh-session
+  kitty +kitten ssh "$@"
 }
 
 # Shorthand to get info and dependent upon at the same time
@@ -250,3 +256,25 @@ format() {
     echo "'$1' is not a valid file"
   fi
 }
+
+# Repeat command N times
+# loop 5 <command>
+function loop() {
+    number=$1
+    shift
+    for n in $(seq $number); do
+      $@
+    done
+}
+
+# Helper to use ruby in CLI
+rb() {
+  ruby -e "puts $1"
+}
+
+# Split input by separator
+# echo $PATH | split_by :
+split_by() {
+  ruby -e "puts STDIN.read.split('$1')"
+}
+

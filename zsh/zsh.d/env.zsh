@@ -6,11 +6,14 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 
+# Default: *?_-.[]~=/&;!#$%^(){}<>
+export WORDCHARS='*?_!#$%^'
+
 ulimit -n 10240
 
 # ========== EDITOR/PAGER/etc ============
 
-export EDITOR='vim'
+export EDITOR='nvim'
 export BROWSER='open'
 
 export PAGER="less -X"
@@ -59,7 +62,7 @@ typeset -U PATH # remove duplicate entries
 
 # PATHs
 #export JAVA_HOME=$(/usr/libexec/java_home)
-#export GOPATH="$HOME/src/go"
+export GOPATH="$HOME/src/go"
 #export RUST_PATH="$HOME/.cargo/bin"
 # export NODE_PACKAGES_PATH="$HOME/.asdf/installs/nodejs/12.8.1/.npm/lib/node_modules/"
 

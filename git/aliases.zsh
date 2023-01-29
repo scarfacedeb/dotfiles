@@ -9,17 +9,32 @@ alias gclone='git clone'
 # Commit (c)
 alias gc='git commit -v'
 alias gca='git commit -v --amend'
-#alias gcm='git commit -m'
+alias gcm='git commit -m'
 
 # Add (a)
 alias ga='git add'
 #alias gap='git add -p'
 
 # Branches (b, ch)
-alias gch='git checkout'
-alias gb='git branch'
-alias gbb='git switch'
+# alias gch='git checkout'
+# alias gb='git switch'
+alias gbm='git switch master'
+# alias gb='git-switch-fzf' # See below
 alias gbc='git switch -c'
+alias gbl='git branch --sort=-committerdate'
+alias gbb='git switch -' # Back to previous branch
+
+# Quick switch to branch without typing the whole name
+gb() {
+  git switch $(git branch --sort=-committerdate | grep -m 1 $1)
+}
+
+# Fuzzy git switch
+# https://koenwoortman.com/git-faster-branch-checkouts-with-fzf/
+gbi() {
+  git switch $(git for-each-ref refs/heads/ --format='%(refname:short)' | fzf)
+}
+
 alias gr='git restore'
 alias grmt='git remote -v'
 
@@ -76,15 +91,15 @@ glogd() {
 # FZF
 
 # Fuzzy git checkout
-fgch() {
+gbcommit() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
   commit=$(echo "$commits" | fzf --tac +s +m -e) &&
-  git checkout $(echo "$commit" | sed "s/ .*//")
+  git switch $(echo "$commit" | sed "s/ .*//")
 }
 
 # Fuzzy git show
-fgsh() {
+gshow() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
   commit=$(echo "$commits" | fzf --tac +s +m -e) &&

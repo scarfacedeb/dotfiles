@@ -13,14 +13,14 @@ bindkey -M vicmd '?'   vi-history-search-backward
 
 # Add emacs-like keybind to viins mode
 bindkey -M viins '^B'  backward-char
-bindkey -M vicmd '^A'  beginning-of-line
-bindkey -M vicmd '^E'  end-of-line
-bindkey -M vicmd '^K'  kill-line
-bindkey -M vicmd '^P'  up-line-or-history
-bindkey -M vicmd '^N'  down-line-or-history
-bindkey -M vicmd '^Y'  yank
-bindkey -M vicmd '^W'  backward-kill-word
-bindkey -M vicmd '^U'  backward-kill-line
+bindkey -M viins '^A'  beginning-of-line
+bindkey -M viins '^E'  end-of-line
+bindkey -M viins '^K'  kill-line
+bindkey -M viins '^P'  up-line-or-history
+bindkey -M viins '^N'  down-line-or-history
+bindkey -M viins '^Y'  yank
+bindkey -M viins '^W'  backward-kill-word
+bindkey -M viins '^U'  backward-kill-line
 
 #bindkey -M viins '^H'  backward-delete-char
 #bindkey -M viins '^?'  backward-delete-char
@@ -32,10 +32,10 @@ zle -N delete-surround surround
 zle -N change-surround surround
 zle -N add-surround surround
 
-bindkey -a cs change-surround
-bindkey -a ds delete-surround
-bindkey -a ys add-surround
-bindkey -a S add-surround
+bindkey -M vicmd cs change-surround
+bindkey -M vicmd ds delete-surround
+bindkey -M vicmd ys add-surround
+bindkey -M vicmd S add-surround
 
 # Surround a forward word by single quote by C-Q (insert mode)
 quote-previous-word-in-single() {
@@ -59,16 +59,16 @@ bindkey -M vicmd '^e' edit-command-line
 
 # ========== Extra ============
 
-# Start TMUX by C-T
-_start-tmux-if-it-is-not-already-started() {
-    BUFFER="${${${(M)${+commands[tmuxx]}#1}:+tmuxx}:-tmux}"
-    if has "tmux_automatically_attach"; then
-        BUFFER="tmux_automatically_attach"
-    fi
-    CURSOR=$#BUFFER
-    zle accept-line
-}
-zle -N _start-tmux-if-it-is-not-already-started
-if ! [[ -n $TMUX ]]; then
-    bindkey '^S' _start-tmux-if-it-is-not-already-started
-fi
+# # Start TMUX by C-T
+# _start-tmux-if-it-is-not-already-started() {
+#     BUFFER="${${${(M)${+commands[tmuxx]}#1}:+tmuxx}:-tmux}"
+#     if has "tmux_automatically_attach"; then
+#         BUFFER="tmux_automatically_attach"
+#     fi
+#     CURSOR=$#BUFFER
+#     zle accept-line
+# }
+# zle -N _start-tmux-if-it-is-not-already-started
+# if ! [[ -n $TMUX ]]; then
+#     bindkey '^S' _start-tmux-if-it-is-not-already-started
+# fi

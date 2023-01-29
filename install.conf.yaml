@@ -9,7 +9,11 @@
   ~/.gitconfig: git/gitconfig
   ~/.gitignore_global: git/gitignore_global
 
-  ~/.zshrc: zshrc
+  ~/.zshrc: zsh/zshrc
+  ~/.zsh.d: zsh/zsh.d
+  ~/.zsh.d/git.zsh: git/aliases.zsh
+  ~/.tmux.conf: zsh/tmux.conf
+
   ~/.config/nvim/init.lua: vim/init.lua
   ~/.config/nvim/lua: vim/lua
 
@@ -22,4 +26,3 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-  - 
