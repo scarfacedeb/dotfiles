@@ -12,6 +12,7 @@
   ~/.zshrc: zsh/zshrc
   ~/.zsh.d: zsh/zsh.d
   ~/.zsh.d/git.zsh: git/aliases.zsh
+  ~/.config/kitty: zsh/kitty
   ~/.tmux.conf: zsh/tmux.conf
 
   ~/.config/nvim/init.lua: vim/init.lua
@@ -20,6 +21,8 @@
   ~/.ruby-version: ruby/ruby-version
   ~/.bundle/config: ruby/bundle_config
   ~/.rubocop: ruby/rubocop.yml
+
+  ~/.hammerspoon: macos/hammerspoon
 
 - create:
   - ~/.git-templates
