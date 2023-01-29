@@ -1,0 +1,33 @@
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.log
+*.swp
+*~
+
+# OS or Editor folders
+.DS_Store
+Thumbs.db
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Ruby hacks
+Localgems
+Localgems.lock
+.solargraph.yml
+
+# Node.js package manager
+/node_modules
+/npm-debug.log
+.npmignore
+
+# Other stuff
+*.pyc
+.pry_history
+.csscomb.json
+
+.tool-versions
+.yardoc

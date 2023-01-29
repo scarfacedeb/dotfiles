@@ -1,0 +1,62 @@
+[user]
+	name = Andrew Volozhanin
+	email = scarfacedeb@gmail.com
+
+[init]
+	templatedir = ~/.git-templates
+	defaultBranch = master
+
+[core]
+	editor = nvim
+	autocrlf = false
+	excludesfile = ~/.gitignore_global
+; attributesfile = ~/.gitattributes
+
+[status]
+	showUntrackedFiles = all
+
+[push]
+	default = current
+
+[rebase]
+	autostash = true
+	autosquash = true
+
+[merge]
+	log = true
+	tool = nvimdiff
+	prompt = false
+
+[mergetool]
+	keepBackup = false
+	path = nvim
+
+[mergetool "nvimdiff"]
+	cmd = "nvim -d $BASE $LOCAL $REMOTE $MERGED"
+
+[diff]
+	renames = copies
+	algorithm = patience
+	renameLimit = 100000000
+
+[pager]
+	; diff = diff-so-fancy | less --tabs=1,5 -RFX
+	; show = diff-so-fancy | less --tabs=1,5 -RFX
+	diff = delta
+	show = delta
+	log = delta
+	reflog = delta
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+  features = decorations
+
+[filter "media"]
+	clean = git media clean %f
+	smudge = git media smudge %f
+	required = true
+
+[alias]
+  log-pickaxe-s  = "!f() { GREPDIFF_REGEX=\"$1\" git -c diff.external=~/.dotfiles/git/pickaxe-diff log  -p --ext-diff -S \"$@\"; }; f"
