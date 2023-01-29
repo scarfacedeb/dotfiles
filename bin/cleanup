@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+#
+# Remove cache and other garbade files.
+
+set -e
+
+echo "Cleaning docker..."
+
+docker image prune -f
+docker volume prune -f
+
+echo "Docker cleaned"
+echo "--------------"
+echo "Cleaning homebrew"
+
+brew cleanup -s
+
+echo "Homebrew cleaned"
+
