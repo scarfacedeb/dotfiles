@@ -30,7 +30,8 @@ hs.alert.defaultStyle.textColor =  {white = 0, alpha = 0.75}
 function config()
   -- Open apps
   local key2App = {
-    w = 'Microsoft Edge',
+    w = 'Orion - CW',
+    e = 'Orion',
     a = 'kitty',
     f = 'Finder',
     s = 'Slack',
@@ -127,12 +128,12 @@ function bindTilingHotkeys()
     wm.upRight(win)
   end)
 
-  hs.hotkey.bind(cmdShift, "f", function()
-    local win = hs.window.focusedWindow()
-    if (win) then
-      wm.toggleFullscreen(win)
-    end
-  end)
+--  hs.hotkey.bind(cmdShift, "f", function()
+--    local win = hs.window.focusedWindow()
+--    if (win) then
+--      wm.toggleFullscreen(win)
+--    end
+--  end)
 
   hs.hotkey.bind(cmdAlt, "f", function()
     local win = hs.window.focusedWindow()

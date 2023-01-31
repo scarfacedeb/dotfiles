@@ -5,6 +5,7 @@ brew "datawire/blackbird/telepresence-legacy"
 brew "tilt"
 
 brew "detect-secrets"
-brew "mysql-client", link: true
+# brew "mysql-client", link: true
+brew "mysql-client@5.7"
 
 cask "google-cloud-sdk"

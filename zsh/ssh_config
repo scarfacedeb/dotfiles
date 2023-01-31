@@ -1,3 +1,5 @@
+Include /Users/a.volozhanin/.colima/ssh_config
+
 Host linode
   HostName 139.162.180.51
   User scarfacedeb
