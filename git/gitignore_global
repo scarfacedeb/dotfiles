@@ -31,3 +31,5 @@ Localgems.lock
 
 .tool-versions
 .yardoc
+
+Tiltfile.dev

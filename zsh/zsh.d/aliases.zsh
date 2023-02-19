@@ -85,7 +85,10 @@ alias service='brew services'
 
 alias be='bundle exec'
 alias rspec='bundle exec rspec'
-alias tilt="$BREW_PREFIX/bin/tilt"
+
+tilt () {
+  $(brew --prefix)/bin/tilt $@
+}
 
 alias pss='ps aux | grep '
 

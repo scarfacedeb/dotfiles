@@ -30,7 +30,7 @@ hs.alert.defaultStyle.textColor =  {white = 0, alpha = 0.75}
 function config()
   -- Open apps
   local key2App = {
-    w = 'Orion - CW',
+    w = 'Microsoft Edge',
     e = 'Orion',
     a = 'kitty',
     f = 'Finder',
