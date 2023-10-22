@@ -29,3 +29,8 @@ git clone git@github.com:scarfacedeb/dotfiles.git ~/.dotfiles && cd ~/.dotfiles
 ### Secrets
 
 Git-secrets are used to store some sensitive data. Read [more](https://www.pascallandau.com/blog/git-secret-encrypt-repository-docker/#export-list-and-import-private-gpg-keys).
+
+
+### Fonts
+
+Nerd fonts were downloaded from [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts#patched-fonts).
