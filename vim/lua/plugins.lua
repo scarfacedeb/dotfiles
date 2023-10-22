@@ -95,6 +95,11 @@ local P = packer.startup({function()
     run = ":TSUpdate"
   }
 
+  use { 
+    "inkarkat/vim-ExtractMatches", 
+    requires = "inkarkat/vim-ingo-library",
+  }
+
   use {
     "neovim/nvim-lspconfig"
   }
@@ -105,6 +110,8 @@ local P = packer.startup({function()
 --   use 'hrsh7th/cmp-cmdline'
 --   use 'hrsh7th/nvim-cmp'
 
+  use "elzr/vim-json"
+
   use "ervandew/supertab"
 
   -- Outline, :AerialToggle
@@ -113,15 +120,15 @@ local P = packer.startup({function()
   -- Gruvbox colorsheme fork with Treesitter support
   -- use { "ellisonleao/gruvbox.nvim", requires = {"rktjmp/lush.nvim"} } 
   use "rebelot/kanagawa.nvim"
-  use "sainnhe/edge"
   use "Th3Whit3Wolf/one-nvim"
+  use "junegunn/seoul256.vim"
   -- use "morhetz/gruvbox" -- Colorscheme
   -- use 'RRethy/nvim-base16'
 
-  use { 
-    "metakirby5/codi.vim",
-    cmd = 'Codi'
-  }
+--   use { 
+--     "metakirby5/codi.vim",
+--     cmd = 'Codi'
+--   }
 
   -- VIM DEBUG
 
