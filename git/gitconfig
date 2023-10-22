@@ -60,3 +60,8 @@
 
 [alias]
   log-pickaxe-s  = "!f() { GREPDIFF_REGEX=\"$1\" git -c diff.external=~/.dotfiles/git/pickaxe-diff log  -p --ext-diff -S \"$@\"; }; f"
+[credential]
+	helper = 
+	helper = /usr/local/share/gcm-core/git-credential-manager
+[credential "https://dev.azure.com"]
+	useHttpPath = true
