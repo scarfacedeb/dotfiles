@@ -96,6 +96,16 @@ function M.gems_grep(opts)
   })
 end
 
+function M.projects_grep(opts)
+  if not opts then opts = {} end
+
+  return fzf.grep({
+    cwd = '~/projects',
+    input_prompt = 'GrepProjects> ',
+    unpack(opts)
+  })
+end
+
 -- FZF
 
 fzf.setup {

@@ -104,6 +104,7 @@ M.mappings = {
         { 'ee', fuzzy.ed_files, 'Fzf in current dir' },
         { 'ep', fuzzy.projects, 'Fzf projects' },
         { 'eo', fuzzy.projects_files, 'Fzf files in projects' },
+        { 'ea', fuzzy.projects_grep, 'Grep files in projects' },
       }},
 
       { name = '+Search and replace', {
