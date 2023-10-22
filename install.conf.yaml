@@ -20,8 +20,7 @@
     ~/.tmux.conf: zsh/tmux.conf
     ~/.config/kitty: zsh/kitty
 
-    ~/.config/nvim/init.lua: vim/init.lua
-    ~/.config/nvim/lua: vim/lua
+    ~/.config/nvim: vim/config
 
     ~/.ruby-version: ruby/ruby-version
     ~/.bundle/config: ruby/bundle_config
@@ -39,6 +38,5 @@
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
     - zsh/setup.sh
-    - vim/setup.sh
     - ruby/setup.sh
     - cw/setup.sh
