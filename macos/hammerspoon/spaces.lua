@@ -29,12 +29,25 @@ function screenSpaces(currentScreen)
   return spaces.layout()[currentScreen:spacesUUID()]
 end
 
+function export.screenSpaces(currentScreen)
+  currentScreen = currentScreen or activeScreen()
+  return spaces.layout()[currentScreen:spacesUUID()]
+end
+
 function spaceInDirection(direction)
   local screenSpaces = screenSpaces()
   local activeIdx = activeSpaceIndex(screenSpaces)
   local targetIdx = direction == 'left' and activeIdx - 1 or activeIdx + 1
 
   return screenSpaces[targetIdx], targetIdx
+end
+
+function export.goToSpaceIdx(idx)
+  local screenSpaces = screenSpaces()
+  local targetSpace = screenSpaces[idx]
+
+  spaces.goToSpace(targetSpace)
+  hs.alert.show("Space: " .. targetSpace, 0.4)
 end
 
 function export.moveToSpaceInDirection(win, direction)

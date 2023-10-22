@@ -1,5 +1,5 @@
 local wm = require("wm")
--- local spaces = require("spaces")
+local spaces = require("spaces")
 local apps = require("appSwitcher")
 
 --------------------------------------------------------------------------------
@@ -10,8 +10,10 @@ local cmdAltCtrl = {"cmd", "alt", "ctrl"}
 local cmdShiftCtrl = {"cmd", "shift", "ctrl"}
 local cmdShift = {"cmd", "shift"}
 local cmd = {"cmd"}
+local ctrl = {"ctrl"}
 local cmdCtrl = {"cmd", "ctrl"}
 local openmash  = {"alt"}
+local alt  = {"alt"}
 
 hs.window.animationDuration = 0
 -- hs.application.enableSpotlightForNameSearches(true)
@@ -31,11 +33,13 @@ function config()
   -- Open apps
   local key2App = {
     w = 'Microsoft Edge',
-    e = 'Orion',
+    -- e = 'Orion',
+    -- w = 'Arc',
     a = 'kitty',
     f = 'Finder',
     s = 'Slack',
-    i = 'Spark',
+    -- h = 'Insomnia',
+    i = 'Spark Desktop',
     t = 'Telegram',
     x = 'Fork',
     m = 'Spotify',
@@ -47,6 +51,8 @@ function config()
   end
 
   hs.hotkey.bind(openmash, ',', apps.launchOrFocusWin('System Preferences'))
+  hs.hotkey.bind(ctrl, 'j', function() hs.eventtap.keyStroke({}, 'down', 1000) end)
+  hs.hotkey.bind(ctrl, 'k', function() hs.eventtap.keyStroke({}, 'up', 1000) end)
 
   hs.hotkey.bind(cmdAlt, "R", function()
     hs.reload()
@@ -55,7 +61,6 @@ function config()
   bindTilingHotkeys()
   bindMouseKeys()
   bindSpacesHotkeys()
-
 
   hs.hotkey.bind(cmdCtrl, "tab", function()
     hs.hints.windowHints()
@@ -145,15 +150,21 @@ end
 
 function bindSpacesHotkeys()
   -- Move to next/prev space
-  hs.hotkey.bind(cmdAlt, "N", function()
-    local win = hs.window.focusedWindow()
-    spaces.moveToSpaceInDirection(win, "right")
-  end)
+  -- hs.hotkey.bind(cmdAlt, "N", function()
+  --   local win = hs.window.focusedWindow()
+  --   spaces.moveToSpaceInDirection(win, "right")
+  -- end)
 
-  hs.hotkey.bind(cmdAlt, "P", function()
-    local win = hs.window.focusedWindow()
-    spaces.moveToSpaceInDirection(win, "left")
-  end)
+  -- hs.hotkey.bind(cmdAlt, "P", function()
+  --   local win = hs.window.focusedWindow()
+  --   spaces.moveToSpaceInDirection(win, "left")
+  -- end)
+
+--   for idx, space in pairs(spaces.screenSpaces()) do
+--     hs.hotkey.bind(alt, idx, function()
+--       spaces.goToSpace(idx)
+--     end)
+--   end
 
   -- Move to next/prev display
   hs.hotkey.bind(cmdCtrl, "N", function()
