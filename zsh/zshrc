@@ -44,12 +44,10 @@ zplug "paulirish/git-open", as:plugin
 
 zplug load
 
-export BREW_PREFIX=$(brew --prefix)
-
 # Add version managers
 # . /usr/local/opt/asdf/libexec/asdf.sh
-. $BREW_PREFIX/opt/chruby/share/chruby/chruby.sh
-. $BREW_PREFIX/opt/chruby/share/chruby/auto.sh
+. $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh
+. $HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh
 
 # Add FZF
 [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
