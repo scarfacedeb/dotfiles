@@ -17,7 +17,7 @@ alias ga='git add'
 
 # Branches (b, ch)
 # alias gch='git checkout'
-# alias gb='git switch'
+alias gb='git branch'
 alias gbm='git switch master'
 # alias gb='git-switch-fzf' # See below
 alias gbc='git switch -c'
@@ -25,7 +25,7 @@ alias gbl='git branch --sort=-committerdate'
 alias gbb='git switch -' # Back to previous branch
 
 # Quick switch to branch without typing the whole name
-gb() {
+gbs() {
   git switch $(git branch --sort=-committerdate | grep -m 1 $1)
 }
 
@@ -33,6 +33,12 @@ gb() {
 # https://koenwoortman.com/git-faster-branch-checkouts-with-fzf/
 gbi() {
   git switch $(git for-each-ref refs/heads/ --format='%(refname:short)' | fzf)
+}
+
+# Git branch delete
+gbd() {
+  git branch -d $1
+  git push origin --delete $1
 }
 
 alias gr='git restore'
