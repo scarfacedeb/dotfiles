@@ -39,6 +39,7 @@ brew "fd" # find
 brew "diff-so-fancy" # diff
 brew "git-delta" # another diff
 brew "fx" # json viewer
+brew "gdu" # du optimized for SSD
 brew "lesspipe"
 brew "tldr"
 
