@@ -43,7 +43,7 @@ function M.projects(opts)
     fd_opts = '-d 1',
     file_icons = false,
     actions = {
-      ['default'] = { M.actions.dir_tcd },
+      ['enter'] = { M.actions.dir_tcd },
     },
     unpack(opts)
   })

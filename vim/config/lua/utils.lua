@@ -38,4 +38,14 @@ end
 
 u.create_command('StripLines', 'lua require("utils").strip_lines()')
 
+function u.toggle_clipboard()
+  if vim.opt.clipboard == 'unnamedplus' then
+    vim.opt.clipboard = ''
+  else
+    vim.opt.clipboard = 'unnamedplus'
+  end
+end
+
+u.create_command('ToggleClipboard', 'lua require("utils").toggle_clipboard()')
+
 return u

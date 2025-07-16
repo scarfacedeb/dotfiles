@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1696795921/share/lua/5.1/?.lua;/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1696795921/share/lua/5.1/?/init.lua;/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1696795921/lib/luarocks/rocks-5.1/?.lua;/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1696795921/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1696795921/lib/lua/5.1/?.so"
+local package_path_str = "/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1744318430/share/lua/5.1/?.lua;/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1744318430/share/lua/5.1/?/init.lua;/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1744318430/lib/luarocks/rocks-5.1/?.lua;/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1744318430/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/Users/a.volozhanin/.cache/nvim/packer_hererocks/2.1.1744318430/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -74,6 +74,17 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  ["CopilotChat.nvim"] = {
+    config = { "\27LJ\2\nó\1\0\0\a\0\b\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0005\3\6\0006\4\0\0'\6\4\0B\4\2\0029\4\5\4=\4\a\3B\0\3\1K\0\1\0\14selection\1\0\1\14selection\0\vvisual\23CopilotChat.select\22Explain this code\bask\16CopilotChat\frequireù\1\1\0\6\0\n\0\0156\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0003\4\b\0005\5\t\0B\0\5\1K\0\1\0\1\0\1\tdesc\31Copilot Chat: Explain code\0\15<leader>cc\6n\bset\vkeymap\bvim\nsetup\16CopilotChat\frequire\0" },
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/CopilotChat.nvim",
+    url = "https://github.com/CopilotC-Nvim/CopilotChat.nvim"
+  },
+  LuaSnip = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/LuaSnip",
+    url = "https://github.com/L3MON4D3/LuaSnip"
+  },
   ["aerial.nvim"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/aerial.nvim",
@@ -84,10 +95,43 @@ _G.packer_plugins = {
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/auto-session",
     url = "https://github.com/rmagatti/auto-session"
   },
+  ["cmp-buffer"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/cmp-buffer",
+    url = "https://github.com/hrsh7th/cmp-buffer"
+  },
+  ["cmp-nvim-lsp"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp"
+  },
+  ["cmp-path"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/cmp-path",
+    url = "https://github.com/hrsh7th/cmp-path"
+  },
+  ["copilot.lua"] = {
+    config = { "\27LJ\2\n√\1\0\0\5\0\n\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\6\0005\3\3\0005\4\4\0=\4\5\3=\3\a\0025\3\b\0=\3\t\2B\0\2\1K\0\1\0\npanel\1\0\1\fenabled\2\15suggestion\1\0\2\15suggestion\0\npanel\0\vkeymap\1\0\1\vaccept\1\1\0\4\17auto_trigger\2\fenabled\2\vkeymap\0\rdebounce\3K\nsetup\fcopilot\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/opt/copilot.lua",
+    url = "https://github.com/zbirenbaum/copilot.lua"
+  },
+  ["ctrlsf.vim"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/ctrlsf.vim",
+    url = "https://github.com/dyng/ctrlsf.vim"
+  },
   ["fzf-lua"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/fzf-lua",
     url = "https://github.com/ibhagwan/fzf-lua"
+  },
+  ["git-blame.nvim"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/git-blame.nvim",
+    url = "https://github.com/f-person/git-blame.nvim"
   },
   ["gitlinker.nvim"] = {
     loaded = true,
@@ -99,10 +143,25 @@ _G.packer_plugins = {
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
     url = "https://github.com/rebelot/kanagawa.nvim"
   },
+  ["kitty-scrollback.nvim"] = {
+    commands = { "KittyScrollbackGenerateKittens", "KittyScrollbackCheckHealth" },
+    config = { "\27LJ\2\n>\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\21kitty-scrollback\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    only_cond = false,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/opt/kitty-scrollback.nvim",
+    url = "https://github.com/mikesmithgh/kitty-scrollback.nvim"
+  },
   ["nest.nvim"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/nest.nvim",
     url = "https://github.com/connorgmeehan/nest.nvim"
+  },
+  ["nvim-cmp"] = {
+    config = { "\27LJ\2\n–\1\0\0\b\0\b\2!6\0\0\0006\2\1\0009\2\2\0029\2\3\2)\4\0\0B\2\2\0A\0\0\3\b\1\0\0X\2\20Ä6\2\1\0009\2\2\0029\2\4\2)\4\0\0\23\5\1\0\18\6\0\0+\a\2\0B\2\5\2:\2\1\2\18\4\2\0009\2\5\2\18\5\1\0\18\6\1\0B\2\4\2\18\4\2\0009\2\6\2'\5\a\0B\2\3\2\n\2\0\0X\2\2Ä+\2\1\0X\3\1Ä+\2\2\0L\2\2\0\a%s\nmatch\bsub\23nvim_buf_get_lines\24nvim_win_get_cursor\bapi\bvim\vunpack\0\2-\0\1\4\1\2\0\5-\1\0\0009\1\0\0019\3\1\0B\1\2\1K\0\1\0\1¿\tbody\15lsp_expandö\2\0\1\4\3\t\0'6\1\0\0'\3\1\0B\1\2\0029\2\2\1B\2\1\2\15\0\2\0X\3\3Ä9\2\3\1B\2\1\1X\2\28Ä-\2\0\0009\2\4\2B\2\1\2\15\0\2\0X\3\4Ä-\2\0\0009\2\5\2B\2\1\1X\2\19Ä-\2\1\0009\2\6\2B\2\1\2\15\0\2\0X\3\4Ä-\2\1\0009\2\a\2B\2\1\1X\2\nÄ-\2\2\0B\2\1\2\15\0\2\0X\3\4Ä-\2\0\0009\2\b\2B\2\1\1X\2\2Ä\18\2\0\0B\2\1\1K\0\1\0\0¿\1¿\2¿\rcomplete\19expand_or_jump\23expand_or_jumpable\21select_next_item\fvisible\vaccept\15is_visible\23copilot.suggestion\frequireé\1\0\1\4\2\4\0\23-\1\0\0009\1\0\1B\1\1\2\15\0\1\0X\2\4Ä-\1\0\0009\1\1\1B\1\1\1X\1\rÄ-\1\1\0009\1\2\1)\3ˇˇB\1\2\2\15\0\1\0X\2\5Ä-\1\1\0009\1\3\1)\3ˇˇB\1\2\1X\1\2Ä\18\1\0\0B\1\1\1K\0\1\0\0¿\1¿\tjump\rjumpable\21select_prev_item\fvisibleø\3\1\0\v\0\27\0)6\0\0\0'\2\1\0B\0\2\0026\1\0\0'\3\2\0B\1\2\0023\2\3\0009\3\4\0005\5\6\0005\6\5\0=\6\a\0059\6\b\0009\6\t\6=\6\n\0055\6\f\0003\a\v\0=\a\r\6=\6\14\0055\6\18\0009\a\15\0003\t\16\0005\n\17\0B\a\3\2=\a\19\0069\a\15\0003\t\20\0005\n\21\0B\a\3\2=\a\22\6=\6\15\0054\6\4\0005\a\23\0>\a\1\0065\a\24\0>\a\2\0065\a\25\0>\a\3\6=\6\26\5B\3\2\0012\0\0ÄK\0\1\0\fsources\1\0\1\tname\tpath\1\0\1\tname\vbuffer\1\0\1\tname\rnvim_lsp\f<S-Tab>\1\3\0\0\6i\6s\0\n<Tab>\1\0\2\f<S-Tab>\0\n<Tab>\0\1\3\0\0\6i\6s\0\fmapping\fsnippet\vexpand\1\0\1\vexpand\0\0\14preselect\tItem\18PreselectMode\15completion\1\0\5\15completion\0\fmapping\0\fsources\0\fsnippet\0\14preselect\0\1\0\1\17autocomplete\1\nsetup\0\fluasnip\bcmp\frequire\0" },
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/nvim-cmp",
+    url = "https://github.com/hrsh7th/nvim-cmp"
   },
   ["nvim-fzf"] = {
     loaded = true,
@@ -117,17 +176,22 @@ _G.packer_plugins = {
   ["nvim-tree.lua"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
-    url = "https://github.com/kyazdani42/nvim-tree.lua"
+    url = "https://github.com/nvim-tree/nvim-tree.lua"
   },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
   },
+  ["nvim-treesitter-context"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/nvim-treesitter-context",
+    url = "https://github.com/nvim-treesitter/nvim-treesitter-context"
+  },
   ["nvim-web-devicons"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
-    url = "https://github.com/kyazdani42/nvim-web-devicons"
+    url = "https://github.com/nvim-tree/nvim-web-devicons"
   },
   ["one-nvim"] = {
     loaded = true,
@@ -154,11 +218,6 @@ _G.packer_plugins = {
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/splitjoin.vim",
     url = "https://github.com/AndrewRadev/splitjoin.vim"
   },
-  supertab = {
-    loaded = true,
-    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/supertab",
-    url = "https://github.com/ervandew/supertab"
-  },
   ["vim-ExtractMatches"] = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/vim-ExtractMatches",
@@ -183,6 +242,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/vim-eunuch",
     url = "https://github.com/tpope/vim-eunuch"
+  },
+  ["vim-fugitive"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/vim-fugitive",
+    url = "https://github.com/tpope/vim-fugitive"
   },
   ["vim-helm"] = {
     loaded = true,
@@ -213,6 +277,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/vim-repeat",
     url = "https://github.com/tpope/vim-repeat"
+  },
+  ["vim-rhubarb"] = {
+    loaded = true,
+    path = "/Users/a.volozhanin/.local/share/nvim/site/pack/packer/start/vim-rhubarb",
+    url = "https://github.com/tpope/vim-rhubarb"
   },
   ["vim-surround"] = {
     loaded = true,
@@ -254,12 +323,44 @@ time([[Defining packer_plugins]], false)
 time([[Config for which-key.nvim]], true)
 try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
 time([[Config for which-key.nvim]], false)
+-- Config for: nvim-cmp
+time([[Config for nvim-cmp]], true)
+try_loadstring("\27LJ\2\n–\1\0\0\b\0\b\2!6\0\0\0006\2\1\0009\2\2\0029\2\3\2)\4\0\0B\2\2\0A\0\0\3\b\1\0\0X\2\20Ä6\2\1\0009\2\2\0029\2\4\2)\4\0\0\23\5\1\0\18\6\0\0+\a\2\0B\2\5\2:\2\1\2\18\4\2\0009\2\5\2\18\5\1\0\18\6\1\0B\2\4\2\18\4\2\0009\2\6\2'\5\a\0B\2\3\2\n\2\0\0X\2\2Ä+\2\1\0X\3\1Ä+\2\2\0L\2\2\0\a%s\nmatch\bsub\23nvim_buf_get_lines\24nvim_win_get_cursor\bapi\bvim\vunpack\0\2-\0\1\4\1\2\0\5-\1\0\0009\1\0\0019\3\1\0B\1\2\1K\0\1\0\1¿\tbody\15lsp_expandö\2\0\1\4\3\t\0'6\1\0\0'\3\1\0B\1\2\0029\2\2\1B\2\1\2\15\0\2\0X\3\3Ä9\2\3\1B\2\1\1X\2\28Ä-\2\0\0009\2\4\2B\2\1\2\15\0\2\0X\3\4Ä-\2\0\0009\2\5\2B\2\1\1X\2\19Ä-\2\1\0009\2\6\2B\2\1\2\15\0\2\0X\3\4Ä-\2\1\0009\2\a\2B\2\1\1X\2\nÄ-\2\2\0B\2\1\2\15\0\2\0X\3\4Ä-\2\0\0009\2\b\2B\2\1\1X\2\2Ä\18\2\0\0B\2\1\1K\0\1\0\0¿\1¿\2¿\rcomplete\19expand_or_jump\23expand_or_jumpable\21select_next_item\fvisible\vaccept\15is_visible\23copilot.suggestion\frequireé\1\0\1\4\2\4\0\23-\1\0\0009\1\0\1B\1\1\2\15\0\1\0X\2\4Ä-\1\0\0009\1\1\1B\1\1\1X\1\rÄ-\1\1\0009\1\2\1)\3ˇˇB\1\2\2\15\0\1\0X\2\5Ä-\1\1\0009\1\3\1)\3ˇˇB\1\2\1X\1\2Ä\18\1\0\0B\1\1\1K\0\1\0\0¿\1¿\tjump\rjumpable\21select_prev_item\fvisibleø\3\1\0\v\0\27\0)6\0\0\0'\2\1\0B\0\2\0026\1\0\0'\3\2\0B\1\2\0023\2\3\0009\3\4\0005\5\6\0005\6\5\0=\6\a\0059\6\b\0009\6\t\6=\6\n\0055\6\f\0003\a\v\0=\a\r\6=\6\14\0055\6\18\0009\a\15\0003\t\16\0005\n\17\0B\a\3\2=\a\19\0069\a\15\0003\t\20\0005\n\21\0B\a\3\2=\a\22\6=\6\15\0054\6\4\0005\a\23\0>\a\1\0065\a\24\0>\a\2\0065\a\25\0>\a\3\6=\6\26\5B\3\2\0012\0\0ÄK\0\1\0\fsources\1\0\1\tname\tpath\1\0\1\tname\vbuffer\1\0\1\tname\rnvim_lsp\f<S-Tab>\1\3\0\0\6i\6s\0\n<Tab>\1\0\2\f<S-Tab>\0\n<Tab>\0\1\3\0\0\6i\6s\0\fmapping\fsnippet\vexpand\1\0\1\vexpand\0\0\14preselect\tItem\18PreselectMode\15completion\1\0\5\15completion\0\fmapping\0\fsources\0\fsnippet\0\14preselect\0\1\0\1\17autocomplete\1\nsetup\0\fluasnip\bcmp\frequire\0", "config", "nvim-cmp")
+time([[Config for nvim-cmp]], false)
+-- Config for: CopilotChat.nvim
+time([[Config for CopilotChat.nvim]], true)
+try_loadstring("\27LJ\2\nó\1\0\0\a\0\b\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0'\2\3\0005\3\6\0006\4\0\0'\6\4\0B\4\2\0029\4\5\4=\4\a\3B\0\3\1K\0\1\0\14selection\1\0\1\14selection\0\vvisual\23CopilotChat.select\22Explain this code\bask\16CopilotChat\frequireù\1\1\0\6\0\n\0\0156\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\0016\0\3\0009\0\4\0009\0\5\0'\2\6\0'\3\a\0003\4\b\0005\5\t\0B\0\5\1K\0\1\0\1\0\1\tdesc\31Copilot Chat: Explain code\0\15<leader>cc\6n\bset\vkeymap\bvim\nsetup\16CopilotChat\frequire\0", "config", "CopilotChat.nvim")
+time([[Config for CopilotChat.nvim]], false)
+
+-- Command lazy-loads
+time([[Defining lazy-load commands]], true)
+pcall(vim.api.nvim_create_user_command, 'KittyScrollbackGenerateKittens', function(cmdargs)
+          require('packer.load')({'kitty-scrollback.nvim'}, { cmd = 'KittyScrollbackGenerateKittens', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
+        end,
+        {nargs = '*', range = true, bang = true, complete = function()
+          require('packer.load')({'kitty-scrollback.nvim'}, {}, _G.packer_plugins)
+          return vim.fn.getcompletion('KittyScrollbackGenerateKittens ', 'cmdline')
+      end})
+pcall(vim.api.nvim_create_user_command, 'KittyScrollbackCheckHealth', function(cmdargs)
+          require('packer.load')({'kitty-scrollback.nvim'}, { cmd = 'KittyScrollbackCheckHealth', l1 = cmdargs.line1, l2 = cmdargs.line2, bang = cmdargs.bang, args = cmdargs.args, mods = cmdargs.mods }, _G.packer_plugins)
+        end,
+        {nargs = '*', range = true, bang = true, complete = function()
+          require('packer.load')({'kitty-scrollback.nvim'}, {}, _G.packer_plugins)
+          return vim.fn.getcompletion('KittyScrollbackCheckHealth ', 'cmdline')
+      end})
+time([[Defining lazy-load commands]], false)
+
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType ruby ++once lua require("packer.load")({'vim-textobj-rubyblock'}, { ft = "ruby" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
+  -- Event lazy-loads
+time([[Defining lazy-load event autocommands]], true)
+vim.cmd [[au InsertEnter * ++once lua require("packer.load")({'copilot.lua'}, { event = "InsertEnter *" }, _G.packer_plugins)]]
+vim.cmd [[au User KittyScrollbackLaunch ++once lua require("packer.load")({'kitty-scrollback.nvim'}, { event = "User KittyScrollbackLaunch" }, _G.packer_plugins)]]
+time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 
 _G._packer.inside_compile = false

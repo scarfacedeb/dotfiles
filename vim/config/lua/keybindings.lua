@@ -98,7 +98,7 @@ M.mappings = {
         { 'o', fzf.files, 'Fzf files' },
         { 'ro', fuzzy.gems, 'Gems' },
         { 'ra', fuzzy.gems_grep, 'Gems Grep' },
-        { '<C-o>', fzf.git_status, 'Fzf changed files' },
+        { '<C-o>', fzf.git_status, 'Fzf git stage files' },
         { '<Enter>', fzf.buffers, 'Fzf buffers' },
         { 'ed', ':e %%<SPACE><BACKSPACE>/', 'Edit in current dir' },
         { 'ee', fuzzy.ed_files, 'Fzf in current dir' },
@@ -114,7 +114,11 @@ M.mappings = {
         { '/w', '/<C-r><C-w>', 'Search word under cursor' },
         { 'sw', [[:%s/\<<C-r><C-w>\>/]], 'Replace word under cursor' },
         { 'a', fzf.grep, 'Fzf grep' },
-        { 'A', ':FzfLua grep continue_last_search=true', 'Fzf with last filter' },
+        { 'A', ':FzfLua grep <C-r><C-w><CR>', 'Fzf grep word under cursor' },
+      }},
+
+      { 'f', name = '+File', {
+        { 'd', ':Unlink<CR>', 'Delete the file' },
       }},
 
       { 'y', name = '+Yank', {
@@ -126,11 +130,19 @@ M.mappings = {
         { 'g', ':!fork open<CR>', 'Fork' },
         { 'y', git.copy_line_url, 'Copy remote url' },
         { 'h', fzf.git_bcommits, 'File history' },
+        { 'b', ':Git blame -w -C -C -C<CR>', 'Git blame' },
+        { 'B', ':Git blame<CR>', 'Git blame fast' },
         { 'H', ':!fork log -- %<CR>', 'Fork file history' },
+        { 'r', ':GBrowse<CR>', 'GBrowse: open file in remote' },
       }},
 
       { '=', name = '+Format', {
         { 'j', ':%!python3 -m json.tool<CR>', 'Format JSON' },
+      }},
+
+      { 'l', name = '+LSP', {
+        { 'r', ':LspRestart<CR>', 'Restart LSP' },
+        { 's', ':LspStop<CR>', 'Stop LSP' },
       }},
 
       { 'v', name = 'Vim', {

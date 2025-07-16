@@ -1,3 +1,41 @@
+-- local cmp = require("cmp")
+-- local luasnip = require("luasnip")
+-- local copilot = require("copilot.suggestion")
+
+-- -- Helper to check if there are words before cursor
+-- local has_words_before = function()
+--   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+--   return col ~= 0 and
+--     vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+-- end
+
+-- -- Override cmp.complete to suppress menu if Copilot is visible
+-- local original_complete = cmp.complete
+-- cmp.complete = function(...)
+--   if not copilot.is_visible() then
+--     original_complete(...)
+--   end
+-- end
+
+-- -- Close cmp menu when Copilot shows a suggestion
+-- vim.api.nvim_create_autocmd("User", {
+--   pattern = "CopilotSuggestionShown",
+--   callback = function()
+--     if cmp.visible() then
+--       cmp.close()
+--     end
+--   end,
+-- })
+
+-- -- Optionally reopen cmp when Copilot is dismissed
+-- vim.api.nvim_create_autocmd("User", {
+--   pattern = "CopilotSuggestionDismissed",
+--   callback = function()
+--     if has_words_before() then
+--       cmp.complete()
+--     end
+--   end,
+-- })
 
 -- let g:SuperTabDefaultCompletionType = '<C-N>'
 
