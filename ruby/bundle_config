@@ -1,2 +1,4 @@
 ---
 BUNDLE_JOBS: "8"
+BUNDLE_AUTO_INSTALL: "true"
+BUNDLE_BUILD__PUMA: "--with-pkg-config=/opt/homebrew/opt/openssl@1.1/lib/pkgconfig"
