@@ -32,9 +32,10 @@ hs.alert.defaultStyle.textColor =  {white = 0, alpha = 0.75}
 function config()
   -- Open apps
   local key2App = {
-    w = 'Microsoft Edge',
-    -- e = 'Orion',
+    -- w = 'Microsoft Edge',
     -- w = 'Arc',
+    -- w = 'Orion',
+    w = 'Vivaldi',
     a = 'kitty',
     f = 'Finder',
     s = 'Slack',
@@ -43,7 +44,9 @@ function config()
     t = 'Telegram',
     x = 'Fork',
     m = 'Spotify',
+    -- m = 'Music',
     n = 'Notion',
+    e = 'Visual Studio Code - Insiders',
   }
 
   for key, name in pairs(key2App) do
