@@ -16,7 +16,7 @@ alias ga='git add'
 #alias gap='git add -p'
 
 # Branches (b, ch)
-# alias gch='git checkout'
+alias gch='git checkout'
 alias gb='git branch'
 alias gbm='git switch master'
 # alias gb='git-switch-fzf' # See below
@@ -26,13 +26,13 @@ alias gbb='git switch -' # Back to previous branch
 
 # Quick switch to branch without typing the whole name
 gbs() {
-  git switch $(git branch --sort=-committerdate | grep -m 1 $1)
+  git switch
 }
 
 # Fuzzy git switch
 # https://koenwoortman.com/git-faster-branch-checkouts-with-fzf/
 gbi() {
-  git switch $(git for-each-ref refs/heads/ --format='%(refname:short)' | fzf)
+  git switch $(git branch --sort=-committerdate | fzf)
 }
 
 # Git branch delete
@@ -46,6 +46,7 @@ alias grmt='git remote -v'
 
 # Push/pull (p, l)
 alias gp='git push'
+alias gpf='git push --force-with-lease'
 alias gl='git pull --rebase'
 alias gf='git fetch'
 alias gm='git merge --no-ff'
@@ -59,12 +60,18 @@ alias gcherry='git cherry-pick'
 
 # Reset (r)
 # alias gr='git reset'
-alias grh='git reset HEAD'
+# alias grh='git reset HEAD'
 #alias grhh='git reset HEAD --hard'
 #alias gdis='git checkout --'
 
+# Reset to commit
+grh() {
+  git reset "HEAD~$1"
+}
+
 # Diff (d)
 alias gd='git diff'
+alias gdw='git diff --word-diff'
 alias gds='git diff --staged'
 
 # Git diff after rebase
@@ -75,6 +82,9 @@ alias glog="git log -M --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset
 alias gloga="git log -M --all --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %C(bold cyan)%cd %Cgreen(%cr)%Creset' --abbrev-commit --date=short"
 alias glogv='git log --follow --stat --max-count=10'
 
+alias glogs="glog -p -S"
+alias gblame='git blame -w -C -C -C'
+
 alias gsh='git show'
 alias gwc='git whatchanged -p --abbrev-commit --pretty=medium'
 alias gcount='git shortlog -sn'
@@ -83,7 +93,7 @@ alias gcount='git shortlog -sn'
 alias gst='git stash'
 alias gstp='git stash pop'
 alias gstd='git stash drop'
-alias gsts='git stash -p save'
+alias gsts='git stash --all -p save'
 alias gstk='git stash push --keep-index'
 
 # Misc
