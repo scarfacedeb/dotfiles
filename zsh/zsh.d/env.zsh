@@ -56,10 +56,11 @@ export HISTSIZE=1000000000000000
 export SAVEHIST=$HISTSIZE
 export HISTFILESIZE=
 export HISTFILE=~/.zsh_history
+export HISTIGNORE="feedback"
 
 # ========== Dev ============
 
-export PATH="$HOME/.dotfiles/bin:$PATH"
+export PATH="$HOME/.dotfiles/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 typeset -U PATH # remove duplicate entries
 
@@ -83,6 +84,7 @@ export GOPATH="$HOME/src/go"
 # More heap
 # export JRUBY_OPTS='--dev -J-Xmx1024m'
 # export DISABLE_SPRING=1
+export RUBY_DEBUG_IRB_CONSOLE=1
 
 # ========== Extra ============
 #
@@ -91,3 +93,6 @@ export HOMEBREW_AUTO_UPDATE_SECS=604800
 
 # Remove delay to switch to VI mode in zsh
 export KEYTIMEOUT=1
+
+# Remove timeout for opentelemetry timeout errors in ruby
+export OTEL_EXPORTER_OTLP_TIMEOUT=0

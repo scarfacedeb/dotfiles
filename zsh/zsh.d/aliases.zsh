@@ -85,6 +85,8 @@ alias service='brew services'
 
 alias be='bundle exec'
 alias rspec='bundle exec rspec'
+alias grspec='rspec $(git ls-files --modified --others spec)'
+alias cop='bundle exec rubocop -A'
 
 tilt () {
   $(brew --prefix)/bin/tilt $@
@@ -281,3 +283,29 @@ split_by() {
   ruby -e "puts STDIN.read.split('$1')"
 }
 
+
+# # Function to expand context around a selected history entry
+# fzf_history_expand_context() {
+#     local selected_line=$1
+#     local context_lines=5  # Number of lines before and after to show
+#     local range_start=$((selected_line - context_lines))
+#     local range_end=$((selected_line + context_lines))
+#     history | awk -v start=$range_start -v end=$range_end 'NR >= start && NR <= end'
+# }
+
+# # Function to search history with fzf and expand context
+# fzf_history_with_context() {
+#     # Use fzf to select a history entry
+#     local selected=$(history | fzf --preview 'history | awk -v line={1} "NR >= line-5 && NR <= line+5"' | awk '{print $1}')
+
+#     if [[ -n $selected ]]; then
+#         echo "Selected Command:"
+#         history | awk -v line=$selected 'NR == line'  # Print the selected command
+
+#         echo -e "\nContext Around Selected Command:"
+#         fzf_history_expand_context "$selected"  # Show surrounding commands
+#     fi
+# }
+#
+
+alias vivaldi='/Applications/Vivaldi.app/Contents/MacOS/Vivaldi --new-tab '

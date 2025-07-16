@@ -24,7 +24,7 @@
 
     ~/.ruby-version: ruby/ruby-version
     ~/.bundle/config: ruby/bundle_config
-    ~/.rubocop: ruby/rubocop.yml
+    ~/.rubocop.yml: ruby/rubocop.yml
 
     ~/.hammerspoon: macos/hammerspoon
 
