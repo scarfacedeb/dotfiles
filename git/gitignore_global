@@ -9,6 +9,9 @@
 # OS or Editor folders
 .DS_Store
 Thumbs.db
+.vscode
+.devcontainer
+tsconfig.tsbuildinfo
 
 # Files that might appear on external disk
 .Spotlight-V100
@@ -33,3 +36,7 @@ Localgems.lock
 .yardoc
 
 Tiltfile.dev
+
+# Remove weird stuff from iOS greps
+project.pbxproj
+xcworkspacedata
