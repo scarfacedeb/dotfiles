@@ -32,8 +32,9 @@ local on_attach = function(client, bufnr)
 
   local opts = { noremap=true, silent=true }
   vim.keymap.set('n', '<space>d', vim.diagnostic.open_float, opts)
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+  -- Using vim.diagnostic.jump() instead of deprecated goto_prev/goto_next
+  vim.keymap.set('n', '[d', function() vim.diagnostic.jump({ count = -1 }) end, opts)
+  vim.keymap.set('n', ']d', function() vim.diagnostic.jump({ count = 1 }) end, opts)
   vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 end
 

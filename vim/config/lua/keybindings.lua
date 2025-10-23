@@ -14,7 +14,12 @@ function M.createMappings(ft)
 end
 
 function M.defineFiletypeAutocmd(ft)
-  vim.cmd("autocmd FileType " .. ft .. " :lua require('keybindings').createMappings('" .. ft .. "')")
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = ft,
+    callback = function()
+      require('keybindings').createMappings(ft)
+    end,
+  })
 end
 
 nest.enable(require('nest.integrations.whichkey'))

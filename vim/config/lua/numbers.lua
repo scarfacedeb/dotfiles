@@ -10,12 +10,18 @@ vim.opt.numberwidth = 5
 
 u.autogroup("absolute_numbers", {
   -- Use absolute numbers in insert mode
-  { "InsertEnter", "*", ":set norelativenumber" },
-  { "InsertLeave", "*", ":set relativenumber" },
+  { "InsertEnter", "*", function() vim.opt_local.relativenumber = false end },
+  { "InsertLeave", "*", function() vim.opt_local.relativenumber = true end },
 
   -- Use absolute numbers when focus is lost
-  { "WinEnter,FocusGained", "*", ":setlocal number relativenumber" },
-  { "WinLeave,FocusLost",   "*", ":setlocal number norelativenumber" }
+  { "WinEnter,FocusGained", "*", function()
+    vim.opt_local.number = true
+    vim.opt_local.relativenumber = true
+  end },
+  { "WinLeave,FocusLost", "*", function()
+    vim.opt_local.number = true
+    vim.opt_local.relativenumber = false
+  end }
 })
 
 

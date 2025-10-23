@@ -1,9 +1,13 @@
 
 -- Strip whitespace at the end of the lines
 local strip_line_exts = {
-  "*.py", "*.js", "*.rb", "*.css", "*.scss", 
-  "*.slim", "*.haml", "*.elm", 
+  "*.py", "*.js", "*.rb", "*.css", "*.scss",
+  "*.slim", "*.haml", "*.elm",
   "*.ex", "*.exs"
 }
 
-vim.cmd("autocmd BufWritePre " .. table.concat(strip_line_exts, ",") .. " :StripLines")
+-- Modern API: use vim.api.nvim_create_autocmd instead of vim.cmd
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = strip_line_exts,
+  command = "StripLines",
+})

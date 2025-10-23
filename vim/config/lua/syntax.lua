@@ -41,7 +41,8 @@ vim.o.background = "dark"
 
 -- Disable highlight on syntax errors to fix a horrendous lag when editing files
 -- See: https://github.com/nvim-treesitter/nvim-treesitter/issues/119
-vim.cmd("highlight link TSError Normal")
+-- Note: TSError was renamed to @error in Neovim 0.10+
+vim.cmd("highlight link @error Normal")
 
 -- vim.cmd("colorscheme gruvbox")
 vim.cmd("colorscheme kanagawa")

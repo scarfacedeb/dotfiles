@@ -393,7 +393,10 @@ config = {
 
 -- Recompile packer when plugins.lua changes
 u.autogroup("packer_user_config", {
-  { "BufWritePost", "plugins.lua", "source <afile> | PackerCompile" }
+  { "BufWritePost", "plugins.lua", function()
+    vim.cmd("source <afile>")
+    vim.cmd("PackerCompile")
+  end }
 })
 
 return P
