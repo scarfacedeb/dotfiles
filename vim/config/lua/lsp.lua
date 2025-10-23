@@ -1,4 +1,3 @@
-local lsp = require('lspconfig')
 local lsp_util = require('lspconfig.util')
 
 -- Use an on_attach function to only map the following keys
@@ -7,7 +6,7 @@ local on_attach = function(client, bufnr)
   print('Attached LSP: ' .. client.name)
 
   -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -35,13 +34,12 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 end
 
--- Setup autocomplete for cmp
--- local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
--- socket support: https://github.com/neovim/neovim/issues/11911 
-lsp.solargraph.setup {
+-- Configure LSP servers using vim.lsp.config
+-- socket support: https://github.com/neovim/neovim/issues/11911
+vim.lsp.config.solargraph = {
   cmd = { 'solargraph', 'stdio' },
-  -- capabilities = capabilities,
+  filetypes = { 'ruby' },
+  root_markers = { 'Gemfile', '.git', '.lsp_ruby_root' },
   settings = {
     solargraph = {
       diagnostics = true,
@@ -49,25 +47,33 @@ lsp.solargraph.setup {
       -- useBundler = true,
     }
   },
-  root_dir = lsp_util.root_pattern('Gemfile', '.git', '.lsp_ruby_root'),
-  on_attach = on_attach,
-  flags = {
-    debounce_text_changes = 150,
-  },
-}
-
-lsp.ts_ls.setup {
-  -- capabilities = capabilities,
-  on_attach = on_attach,
-  flags = {
-    debounce_text_changes = 150,
-  },
-}
-
-lsp.eslint.setup {
   on_attach = on_attach,
 }
 
-lsp.gopls.setup {
+vim.lsp.config.ts_ls = {
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
+  root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
   on_attach = on_attach,
 }
+
+vim.lsp.config.eslint = {
+  cmd = { 'vscode-eslint-language-server', '--stdio' },
+  filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx', 'vue', 'svelte', 'astro' },
+  root_markers = { '.eslintrc', '.eslintrc.js', '.eslintrc.cjs', '.eslintrc.yaml', '.eslintrc.yml', '.eslintrc.json', 'package.json' },
+  on_attach = on_attach,
+}
+
+vim.lsp.config.gopls = {
+  cmd = { 'gopls' },
+  filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+  root_markers = { 'go.work', 'go.mod', '.git' },
+  on_attach = on_attach,
+}
+
+-- Enable LSP servers
+local servers = { 'solargraph', 'ts_ls', 'eslint', 'gopls' }
+
+for _, server in ipairs(servers) do
+  vim.lsp.enable(server)
+end

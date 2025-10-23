@@ -112,7 +112,7 @@ fzf.setup {
   winopts = {
     fullscreen = true,
     -- border = 'none',
-    hl = {
+    hls = {
     },
     preview = {
       default = 'bat', -- faster than builtin

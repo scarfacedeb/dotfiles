@@ -75,25 +75,25 @@ local P = packer.startup({function()
     end,
   }
 
-  use {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    requires = {
-      { "zbirenbaum/copilot.lua" },
-      { "nvim-lua/plenary.nvim" },
-    },
-    config = function()
-      require("CopilotChat").setup({
-        -- optional settings
-      })
+  -- use {
+  --   "CopilotC-Nvim/CopilotChat.nvim",
+  --   requires = {
+  --     { "zbirenbaum/copilot.lua" },
+  --     { "nvim-lua/plenary.nvim" },
+  --   },
+  --   config = function()
+  --     require("CopilotChat").setup({
+  --       -- optional settings
+  --     })
 
-      -- Optional: quick chat keymap
-      vim.keymap.set("n", "<leader>cc", function()
-        require("CopilotChat").ask("Explain this code", {
-          selection = require("CopilotChat.select").visual,
-        })
-      end, { desc = "Copilot Chat: Explain code" })
-    end,
-  }
+  --     -- Optional: quick chat keymap
+  --     vim.keymap.set("n", "<leader>cc", function()
+  --       require("CopilotChat").ask("Explain this code", {
+  --         selection = require("CopilotChat.select").visual,
+  --       })
+  --     end, { desc = "Copilot Chat: Explain code" })
+  --   end,
+  -- }
 
   use({
     "hrsh7th/nvim-cmp",
@@ -123,8 +123,8 @@ local P = packer.startup({function()
             luasnip.lsp_expand(args.body)
           end,
         },
-        mapping = {
           -- Smart Tab behavior
+        mapping = {
           ["<Tab>"] = cmp.mapping(function(fallback)
             local copilot = require("copilot.suggestion")
             if copilot.is_visible() then
