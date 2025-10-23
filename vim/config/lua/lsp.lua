@@ -1,5 +1,8 @@
 local lsp_util = require('lspconfig.util')
 
+-- Setup cmp capabilities for LSP
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -47,6 +50,7 @@ vim.lsp.config.solargraph = {
       -- useBundler = true,
     }
   },
+  capabilities = capabilities,
   on_attach = on_attach,
 }
 
@@ -54,6 +58,7 @@ vim.lsp.config.ts_ls = {
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx' },
   root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
+  capabilities = capabilities,
   on_attach = on_attach,
 }
 
@@ -61,6 +66,7 @@ vim.lsp.config.eslint = {
   cmd = { 'vscode-eslint-language-server', '--stdio' },
   filetypes = { 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx', 'vue', 'svelte', 'astro' },
   root_markers = { '.eslintrc', '.eslintrc.js', '.eslintrc.cjs', '.eslintrc.yaml', '.eslintrc.yml', '.eslintrc.json', 'package.json' },
+  capabilities = capabilities,
   on_attach = on_attach,
 }
 
@@ -68,6 +74,7 @@ vim.lsp.config.gopls = {
   cmd = { 'gopls' },
   filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
   root_markers = { 'go.work', 'go.mod', '.git' },
+  capabilities = capabilities,
   on_attach = on_attach,
 }
 
