@@ -55,3 +55,5 @@ zplug load
 
 # Add cw-cli
 if [ -f $HOME/projects/cw-cli/path.zsh.inc ] ; then source $HOME/projects/cw-cli/path.zsh.inc ; fi
+
+. "$HOME/.local/bin/env"

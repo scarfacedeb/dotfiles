@@ -40,3 +40,6 @@ Tiltfile.dev
 # Remove weird stuff from iOS greps
 project.pbxproj
 xcworkspacedata
+
+# AI
+.claude
