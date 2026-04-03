@@ -60,12 +60,13 @@ alias gcherry='git cherry-pick'
 
 # Reset (r)
 # alias gr='git reset'
-# alias grh='git reset HEAD'
-#alias grhh='git reset HEAD --hard'
+# alias gr='git reset'
+alias grh='git reset --hard '
 #alias gdis='git checkout --'
+alias grho='git reset --hard origin'
 
 # Reset to commit
-grh() {
+grhead() {
   git reset "HEAD~$1"
 }
 
@@ -168,3 +169,8 @@ gitexport(){
   mkdir -p "$1"
   git archive master | tar -x -C "$1"
 }
+
+
+### GITHUB gh
+
+alias gh_pr_open="gh pr view --web"

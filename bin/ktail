@@ -1,0 +1,274 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "rdkafka"
+require "json"
+require "time"
+require "open3"
+require "securerandom"
+require "logger"
+
+# ------------------------------------------------------------------------
+# ANSI Color Codes for simple highlighting in the terminal
+# ------------------------------------------------------------------------
+RESET  = "\033[0m"
+RED    = "\033[31m"
+GREEN  = "\033[32m"
+YELLOW = "\033[33m"
+BLUE   = "\033[34m"
+CYAN   = "\033[36m"
+
+# ------------------------------------------------------------------------
+# Global flags for graceful shutdown
+# ------------------------------------------------------------------------
+$exiting = false
+
+# Trap Ctrl+C (SIGINT) to set $exiting — no exit here so the main loop
+# can break cleanly before at_exit tears down the port-forward.
+trap("INT") do
+  $exiting = true
+  puts "\n#{YELLOW}Caught Ctrl+C; shutting down gracefully…#{RESET}"
+end
+
+# ------------------------------------------------------------------------
+# Log + Kafka Consumer Setup
+# ------------------------------------------------------------------------
+$log = File.open("kafka.log", "w") if ENV['DEBUG'] == '1'
+
+# Silence rdkafka's internal C-library log noise unless DEBUG is set.
+Rdkafka::Config.logger = ENV['DEBUG'] == '1' ? Logger.new($stderr) : Logger.new(IO::NULL)
+
+KAFKA_BROKERS = ENV.fetch("APP_KAFKA_BROKERS", "localhost:9092")
+
+KAFKA_CONFIG = {
+  "bootstrap.servers" => KAFKA_BROKERS,
+  "group.id" => "ktail-#{SecureRandom.hex(4)}",
+  "auto.offset.reset" => ENV["FROM_BEGINNING"] == "1" ? "earliest" : "latest",
+  "enable.auto.commit" => "false",
+  "session.timeout.ms" => "6000",
+  "socket.timeout.ms" => "2000"
+}
+
+def output(line)
+  $log&.puts(line)
+  puts line
+end
+
+#
+# colorize_json(str)
+#   - If valid JSON, pretty-print and highlight braces, keys, numbers, etc.
+#
+def colorize_json(obj)
+  pretty = JSON.pretty_generate(obj)
+
+  lines = pretty.split("\n").map do |line|
+    line
+      .gsub(/\{|\}|\[|\]/,             "#{CYAN}\\0#{RESET}")        # Brackets
+      .gsub(/"(.*?)":/,                "#{YELLOW}\\0#{RESET}")      # Keys
+      .gsub(/:\s*"(.*?)"/,             "#{GREEN}\\0#{RESET}")       # String values
+      .gsub(/:\s*(\d+(\.\d+)?)/,       "#{RED}\\0#{RESET}")         # Numbers
+      .gsub(/:\s*(true|false|null)/,   "#{BLUE}\\0#{RESET}")        # Booleans/null
+  end
+
+  lines.join("\n")
+end
+
+#
+# print_message(m)
+#   - Parse the message, colorize the payload, and log it.
+#
+def print_message(m)
+  value = JSON.parse(m.payload)
+  ts, topic, event, payload = value.values_at("produced_at", "topic", "event_name", "payload")
+
+  highlighted_payload = colorize_json(payload)
+
+  line = "#{CYAN}#{ts}#{RESET} #{YELLOW}#{topic}/#{event}#{RESET}\n" \
+         "#{highlighted_payload}"
+  output(line)
+rescue StandardError => e
+  output("#{RED}Error parsing message: #{e.message}#{RESET}")
+end
+
+#
+# consume_topics(topics)
+#   - Subscribe a single consumer to all topics and process messages.
+#
+def consume_topics(topics)
+  output("#{BLUE}--- Consuming #{topics.count} topic(s) ---#{RESET}")
+  consumer = Rdkafka::Config.new(KAFKA_CONFIG).consumer
+  consumer.subscribe(*topics)
+
+  loop do
+    break if $exiting
+    message = consumer.poll(500)
+    next if message.nil?
+    print_message(message)
+  end
+rescue StandardError => e
+  unless $exiting
+    output("#{RED}KAFKA ERROR: #{e.class} #{e.message}#{RESET}")
+    retry unless $exiting
+  end
+ensure
+  if consumer
+    closer = Thread.new { consumer.close rescue nil }
+    closer.join(2) # wait up to 2s, then abandon
+  end
+end
+
+#
+# Function to get current namespace from kubectl context
+#
+def get_current_namespace
+  stdout, _stderr, status = Open3.capture3("kubectl config view --minify --output 'jsonpath={..namespace}'")
+  if status.success? && !stdout.strip.empty?
+    stdout.strip
+  else
+    nil
+  end
+end
+
+#
+# Select Namespace with fzf
+#
+def select_namespace_with_fzf(kafka_svcs, current_namespace)
+  namespaces = kafka_svcs.map { |(namespace, _)| namespace }
+
+  # Prepare namespace list with current namespace at the top
+  if current_namespace && namespaces.include?(current_namespace)
+    namespaces = [current_namespace] + (namespaces - [current_namespace])
+  end
+
+  fzf_input = namespaces.join("\n")
+
+  Open3.popen2("fzf --height=40% --reverse --prompt='Select namespace: ' --header='↑↓ to navigate, Enter to select'") do |stdin, stdout, wait_thr|
+    stdin.write(fzf_input)
+    stdin.close
+
+    selected = stdout.read.strip
+
+    if wait_thr.value.success? && !selected.empty?
+      output("#{GREEN}Selected namespace: #{selected}#{RESET}")
+      return selected
+    else
+      output("#{RED}No namespace selected. Exiting.#{RESET}")
+      exit(1)
+    end
+  end
+end
+
+# ------------------------------------------------------------------------
+# Main Logic Starts Here
+# ------------------------------------------------------------------------
+
+# Parse command-line arguments
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ktail [options]"
+
+  opts.on("-n", "--namespace [NAMESPACE]", "Use specific namespace or show selection if not provided") do |ns|
+    options[:namespace] = ns
+    options[:force_selection] = true if ns.nil?
+  end
+
+  opts.on("-t", "--topic PATTERN", "Filter topics by regex pattern (can specify multiple times)") do |pattern|
+    options[:topic_patterns] ||= []
+    options[:topic_patterns] << pattern
+  end
+end.parse!
+
+force_selection = options[:force_selection] || false
+specified_namespace = options[:namespace]
+
+services_raw = `kubectl get svc --all-namespaces -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name --no-headers`
+lines = services_raw.strip.lines.map(&:strip)
+
+kafka_svcs = lines.map { |l| l.split(/\s+/, 2) }
+               .select { |(_ns, name)| name == "kafka-service" }
+
+if kafka_svcs.empty?
+  output("#{RED}No 'kafka-service' found in any namespace.#{RESET}")
+  exit(1)
+end
+
+kafka_svcs.uniq! { |ns, _| ns }
+
+selected_ns = nil
+
+# Step 1: Determine namespace
+if specified_namespace && !force_selection
+  # Use namespace from command-line argument
+  selected_ns = specified_namespace
+  output("#{GREEN}Using specified namespace: #{selected_ns}#{RESET}")
+else
+  # Get current namespace
+  current_namespace = get_current_namespace
+
+  # If -n flag was used without argument, force fzf selection
+  if force_selection
+    selected_ns = select_namespace_with_fzf(kafka_svcs, current_namespace)
+  elsif current_namespace && kafka_svcs.any? { |ns, _| ns == current_namespace }
+    output("#{GREEN}Using current namespace: #{current_namespace}#{RESET}")
+    selected_ns = current_namespace
+  else
+    # Use fzf to select namespace
+    selected_ns = select_namespace_with_fzf(kafka_svcs, current_namespace)
+  end
+end
+
+port_forward_pid = spawn(
+  "kubectl", "port-forward", "service/kafka-service", "9092:9092",
+  "-n", selected_ns,
+  out: "/dev/null", err: "/dev/null"
+)
+
+at_exit do
+  if port_forward_pid
+    begin
+      Process.kill("TERM", port_forward_pid)
+      Process.wait(port_forward_pid)
+      output("#{GREEN}Port-forward process terminated.#{RESET}")
+    rescue StandardError => e
+      output("#{RED}Could not kill port-forward: #{e.message}#{RESET}")
+    end
+  end
+end
+
+sleep(2)
+
+topics = []
+begin
+  admin = Rdkafka::Config.new(KAFKA_CONFIG).admin
+  topics = admin.metadata.topics.map { |t| t[:topic_name] }.reject { |t| t.start_with?("__") }
+  admin.close
+rescue StandardError => e
+  output("#{RED}KAFKA ERROR (listing topics): #{e.class} #{e.message}#{RESET}")
+  exit(1)
+end
+
+# Filter topics by patterns if provided
+topic_patterns = options[:topic_patterns]
+if topic_patterns && !topic_patterns.empty?
+  begin
+    patterns = topic_patterns.map { |p| Regexp.new(p) }
+    topics = topics.select { |topic| patterns.any? { |pattern| pattern.match?(topic) } }
+
+    if topics.empty?
+      output("#{RED}No topics matched the provided patterns: #{topic_patterns.join(', ')}#{RESET}")
+      exit(1)
+    end
+
+    output("#{GREEN}Matched #{topics.size} topic(s): #{topics.join(', ')}#{RESET}")
+  rescue RegexpError => e
+    output("#{RED}Invalid regex pattern: #{e.message}#{RESET}")
+    exit(1)
+  end
+end
+
+output("#{GREEN}--- Started ---#{RESET}")
+
+consume_topics(topics)
+

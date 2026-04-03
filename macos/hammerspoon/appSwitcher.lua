@@ -39,9 +39,9 @@ local appSwitcher = {}
 -- end
 
 function appSwitcher.launchOrFocusWin(name)
-  return function()
-    hs.application.launchOrFocus(name)
-  end
+    return function()
+        hs.application.launchOrFocus(name)
+    end
 end
 
 return appSwitcher
