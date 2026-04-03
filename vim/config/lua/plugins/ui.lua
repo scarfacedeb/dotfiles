@@ -41,11 +41,7 @@ return {
     end,
   },
 
-  -- Outline: :AerialToggle
-  "nvim-treesitter/nvim-treesitter-context",
-
   -- Colorschemes
   "rebelot/kanagawa.nvim",
-  "Th3Whit3Wolf/one-nvim",
   "junegunn/seoul256.vim",
 }

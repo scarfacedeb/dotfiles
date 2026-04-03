@@ -34,6 +34,5 @@ return {
     end,
   },
 
-  "MTDL9/vim-log-highlighting",
   "towolf/vim-helm",
 }
