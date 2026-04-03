@@ -370,20 +370,6 @@ local P = packer.startup({function()
   -- use "tweekmonster/startuptime.vim"
   -- use "bfredl/nvim-luadev"
   -- use "rafcamlet/nvim-luapad"
-
-    use {
-      'mikesmithgh/kitty-scrollback.nvim',
-      disable = false,
-      opt = true,
-      cmd = { 'KittyScrollbackGenerateKittens', 'KittyScrollbackCheckHealth' },
-      event = { 'User KittyScrollbackLaunch' },
-      -- tag = '*', -- latest stable version, may have breaking changes if major version changed
-      -- tag = 'v2.0.0', -- pin specific tag
-      config = function()
-        require('kitty-scrollback').setup()
-      end,
-    }
-
 end,
 config = {
   display = {
