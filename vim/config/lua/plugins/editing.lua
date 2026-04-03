@@ -7,9 +7,7 @@ return {
   "junegunn/vim-easy-align",    -- Easy align (ga)
   {
     "gbprod/yanky.nvim",        -- Yank ring with post-paste cycling (<Leader>p/<Leader>P)
-    config = function()
-      require("yanky").setup({})
-    end,
+    config = true,
   },
   "tpope/vim-unimpaired",       -- [q, ]q, [Q, ]Q and etc keybindings
   "tpope/vim-eunuch",           -- UNIX shell helpers (mkdir, mv, cp)
