@@ -130,6 +130,19 @@ require("lazy").setup({
 
   "neovim/nvim-lspconfig",
 
+  {
+    "mason-org/mason.nvim",
+    build = ":MasonUpdate",
+    config = function()
+      require("mason").setup({ ui = { border = "rounded" } })
+    end,
+  },
+
+  {
+    "mason-org/mason-lspconfig.nvim",
+    dependencies = { "mason-org/mason.nvim" },
+  },
+
   -- Experiments
 
   {

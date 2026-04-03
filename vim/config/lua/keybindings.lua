@@ -148,6 +148,8 @@ M.mappings = {
       { 'l', name = '+LSP', {
         { 'r', ':lsp restart<CR>', 'Restart LSP' },
         { 's', ':lsp stop<CR>', 'Stop LSP' },
+        { 'm', ':Mason<CR>', 'Mason' },
+        { 'h', ':checkhealth lsp<CR>', 'LSP health' },
       }},
 
       { 'v', name = 'Vim', {
@@ -206,6 +208,42 @@ nest.applyKeymaps(M.mappings)
 for ft, _ in pairs(M.filetype) do
   M.defineFiletypeAutocmd(ft)
 end
+
+-- LSP keybindings — set lazily when an LSP client attaches to a buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('lsp_keybindings', { clear = true }),
+  callback = function(args)
+    -- local client = vim.lsp.get_client_by_id(args.data.client_id)
+    -- vim.notify('Attached LSP: ' .. client.name, vim.log.levels.INFO)
+
+    nest.applyKeymaps({
+      { buffer = args.buf, options = { noremap = true, silent = true }, {
+
+        -- Navigation
+        { 'gD', vim.lsp.buf.declaration, 'Go to declaration' },
+        { 'gd', vim.lsp.buf.definition, 'Go to definition (also: <C-]> via tagfunc)' },
+        -- { 'K', vim.lsp.buf.hover, 'Hover' },               -- default in 0.12
+        -- { 'gi', vim.lsp.buf.implementation, 'Go to implementation' }, -- use gri (default)
+        -- { 'gr', vim.lsp.buf.references, 'References' },    -- conflicts with grn/gra/grr/gri defaults; use grr
+
+        -- Signature help (normal mode — insert default is <C-s>)
+        -- { '<C-k>', vim.lsp.buf.signature_help, 'Signature help' },
+
+        -- Actions
+        -- { '<Space>rn', vim.lsp.buf.rename, 'Rename (also: grn)' },
+        -- { '<Space>ca', vim.lsp.buf.code_action, 'Code action (also: gra)' },
+        -- { '<Space>D', vim.lsp.buf.type_definition, 'Type definition (also: grt)' },
+        { '<Space>=f', function() vim.lsp.buf.format({ async = true }) end, 'Format document' },
+
+        -- Diagnostics
+        { '<Space>d', vim.diagnostic.open_float, 'Diagnostic float (also: <C-W>d)' },
+        { '<Space>q', vim.diagnostic.setloclist, 'Diagnostics to loclist' },
+        -- { '[d', function() vim.diagnostic.jump({ count = -1 }) end, 'Prev diagnostic' }, -- default in 0.12
+        -- { ']d', function() vim.diagnostic.jump({ count = 1 }) end, 'Next diagnostic' },  -- default in 0.12
+      }},
+    })
+  end,
+})
 
 -- -- Start interactive EasyAlign in visual mode (e.g. vipga)
 -- xmap ga <Plug>(EasyAlign)

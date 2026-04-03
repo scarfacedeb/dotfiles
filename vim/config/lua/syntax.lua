@@ -1,5 +1,10 @@
 local M = {}
 
+-- Neovim 0.12's built-in Lua highlights query uses 'operator' field not in
+-- tree-sitter-lua grammar. Override with empty query to suppress the error.
+-- Remove once Neovim ships a fix (nvim-treesitter#8480).
+vim.treesitter.query.set("lua", "highlights", "; disabled")
+
 require("nvim-treesitter").setup({
   ensure_installed = "all", -- "all", "maintained", or custom
   ignore_install = { "phpdoc" },
