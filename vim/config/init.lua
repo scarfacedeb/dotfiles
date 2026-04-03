@@ -1,92 +1,39 @@
--- Set leader before lazy.nvim loads (lazy.nvim recommendation)
+-- Leader must be set before lazy.nvim loads (lazy.nvim best practice)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
--- Assign to global config variable to make it easier to access them via `:lua config.keybindings.func()`
-_G.config = {
-  plugins = require('plugins'),
-  syntax = require('syntax'),
-  fuzzy = require('fuzzy'),
-  git = require('git'),
-  ui = require('ui'),
-  keybindings = require('keybindings'),
-  numbers = require('numbers'),
-  autocommands = require('autocommands'),
-  lsp = require('lsp'),
-  autocomplete = require('autocomplete'),
-  -- dap_config = require('dap_config'),
-  session = require('session'),
-}
+require('config.options')
 
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to continue...", "ErrorMsg" },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Auto-imports lua/plugins/*.lua — each file returns plugin spec(s)
+require("lazy").setup("plugins", { ui = { border = "rounded" } })
+
+require('config.autocmds')
+require('config.keymaps')
+
+-- Cmd-line abbreviations
+vim.cmd("cabbr <expr> %% expand('%:p:h')") -- %% → current file dir
+vim.cmd("cabbr <expr> %$ expand('%:t')")   -- %$ → current filename
+
+-- Inspect utility (available in command line as :lua inspect(...))
 function _G.inspect(obj)
-  output = vim.inspect(obj)
+  local output = vim.inspect(obj)
   print(output)
   return output
 end
-
--- ALIASES
-
--- Alias %% to current file dir
-vim.cmd("cabbr <expr> %% expand('%:p:h')")
--- Alias %$ to current filename
-vim.cmd("cabbr <expr> %$ expand('%:t')")
-
-
--- CONFIG
-
--- UI
--- vim.opt.lazyredraw = true
-vim.opt.cursorline = true
-vim.opt.colorcolumn = "120" -- color 120 column
-
--- Open new split panes to <s>right</s> and bottom, which feels more natural
-vim.opt.splitbelow = true
--- vim.opt.splitright = true
-
--- Tab completion
--- will insert tab at beginning of line,
--- will use completion if not at beginning
-vim.opt.wildmode = "list:longest,list:full"
-vim.opt.wildignorecase = true
-
--- Scroll
-vim.opt.scrolljump = 20  -- lines to scroll when cursor leaves screen
-vim.opt.scrolloff = 1   -- minimum lines to keep above and below cursor
-
-
--- EDITING
-
--- Indent
--- Soft tabs, 2 spaces
-vim.opt.tabstop = 2         -- number of visual spaces per TAB
-vim.opt.softtabstop = 2     -- number of spaces in tab when editing
-vim.opt.shiftwidth = 2      -- number of spaces to indent with << >>
-vim.opt.shiftround = true        -- take into account existing spaces with << >>
-vim.opt.expandtab = true         -- turn TAB into spaces in Insert
-
--- Display extra whitespace
--- extends, precedes – when line continues further (nowrap)
-vim.opt.list = true 
-vim.opt.listchars = { 
-  tab = "»·", 
-  trail = "·", 
-  nbsp = "~", 
-  eol = "¬", 
-  extends = ">", 
-  precedes = "<" 
-}
-
--- Search
-vim.opt.gdefault = true -- the /g flag on :s substitutions by default
-vim.opt.smartcase = true
-vim.opt.ignorecase = true
-vim.opt.hlsearch = true            -- no highlight matches
-
--- Folding
-vim.opt.foldenable = false    -- disabled by default, enabled with za
-vim.opt.foldlevelstart = 99   -- open most folds by default
-vim.opt.foldnestmax = 30      -- max nested folds
-vim.opt.foldmethod = "indent" 
--- Slows down incremental search and replace
--- vim.opt.foldmethod = "expr"  -- folds including top
--- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
