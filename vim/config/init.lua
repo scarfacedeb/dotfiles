@@ -1,3 +1,7 @@
+-- Set leader before lazy.nvim loads (lazy.nvim recommendation)
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
+
 -- Assign to global config variable to make it easier to access them via `:lua config.keybindings.func()`
 _G.config = {
   plugins = require('plugins'),

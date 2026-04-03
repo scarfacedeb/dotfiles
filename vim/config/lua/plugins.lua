@@ -1,63 +1,63 @@
-local u = require("utils")
-local packer = require("packer")
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to continue...", "ErrorMsg" },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
 
-local P = packer.startup({function()
-  use "wbthomason/packer.nvim"
+require("lazy").setup({
 
   -- EDITING
 
-  use "tpope/vim-repeat" -- Utility plugin to improve .
-  use "tpope/vim-surround" -- Surround targets: csb, cs", ds{, dsb
-  use "tpope/vim-abolish" -- Better find-and-replace: Subvert; camelCase to snake case (crs)
-  use "tpope/vim-commentary" -- Add comments: gcc
-  -- use "tpope/vim-endwise" -- To add `end` blocks in ruby automatically
-  -- use "rstacruz/vim-closer" -- To add brackets on Enter
-  use "AndrewRadev/splitjoin.vim" -- To convert between single line and multi line: gJ, gS
-  use "junegunn/vim-easy-align" -- Easy align (ga)
-
-  use "maxbrunsfeld/vim-yankstack" -- Yank ring (<Leader>p to cycle through yank history)
-
-  use "tpope/vim-unimpaired" -- [q, ]q, [Q, ]Q and etc keybindings
-
-  use 'rmagatti/auto-session' -- Autosave session
+  "tpope/vim-repeat",          -- Utility plugin to improve .
+  "tpope/vim-surround",        -- Surround targets: csb, cs", ds{, dsb
+  "tpope/vim-abolish",         -- Better find-and-replace: Subvert; camelCase to snake case (crs)
+  "tpope/vim-commentary",      -- Add comments: gcc
+  "AndrewRadev/splitjoin.vim", -- Convert between single line and multi line: gJ, gS
+  "junegunn/vim-easy-align",   -- Easy align (ga)
+  "maxbrunsfeld/vim-yankstack", -- Yank ring (<Leader>p to cycle through yank history)
+  "tpope/vim-unimpaired",      -- [q, ]q, [Q, ]Q and etc keybindings
+  "rmagatti/auto-session",     -- Autosave session
 
   -- Text objects
-  use 'kana/vim-textobj-user'  -- Dependency to create custom text objects
-  use 'michaeljsmith/vim-indent-object'  -- Add indent object (e.g. vii)
-  use { 'nelstrom/vim-textobj-rubyblock', ft = 'ruby' }  -- Add ruby block object
-  -- use 'andyl/vim-textobj-elixir', { 'for': 'elixir' } -- Add elixir text object (e)
-    -- use 'thinca/vim-textobj-function-javascript', { 'for': 'javascript' } -- Text objects for js
-    -- use 'jeetsukumaran/vim-indentwise' -- Navigate by indents, [-, [+, ]-, ]+, [=, ]=
+  "kana/vim-textobj-user",           -- Dependency to create custom text objects
+  "michaeljsmith/vim-indent-object", -- Add indent object (e.g. vii)
+  { "nelstrom/vim-textobj-rubyblock", ft = "ruby" }, -- Add ruby block object
 
   -- Commands
-  use 'tpope/vim-eunuch' -- UNIX shell helpers (mkdir, mv, cp)
+  "tpope/vim-eunuch", -- UNIX shell helpers (mkdir, mv, cp)
 
   -- UI
 
-  use {
-    'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons', -- optional, for file icons
-    }
-    -- tag = 'nightly' -- optional, updated every week. (see issue #1193)
-  }
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
 
   -- Syntax
-  use {
+
+  {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
-    branch = 'main',
-  }
+    build = ":TSUpdate",
+    branch = "main",
+  },
 
-  use 'MTDL9/vim-log-highlighting'
-  use 'towolf/vim-helm'
+  "MTDL9/vim-log-highlighting",
+  "towolf/vim-helm",
 
-  --
-  -- AI & LLMs --
-  --
-  -- use 'github/copilot.vim'
+  -- AI & Copilot
 
-  use {
+  {
     "zbirenbaum/copilot.lua",
     event = "InsertEnter",
     config = function()
@@ -67,323 +67,89 @@ local P = packer.startup({function()
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = false,  -- we'll handle it manually
-          }
-
+            accept = false, -- handled manually via Tab
+          },
         },
         panel = { enabled = true },
       })
     end,
-  }
+  },
 
-  -- use {
-  --   "CopilotC-Nvim/CopilotChat.nvim",
-  --   requires = {
-  --     { "zbirenbaum/copilot.lua" },
-  --     { "nvim-lua/plenary.nvim" },
-  --   },
-  --   config = function()
-  --     require("CopilotChat").setup({
-  --       -- optional settings
-  --     })
+  -- Completion
 
-  --     -- Optional: quick chat keymap
-  --     vim.keymap.set("n", "<leader>cc", function()
-  --       require("CopilotChat").ask("Explain this code", {
-  --         selection = require("CopilotChat.select").visual,
-  --       })
-  --     end, { desc = "Copilot Chat: Explain code" })
-  --   end,
-  -- }
-
-  use({
+  {
     "hrsh7th/nvim-cmp",
-    requires = {
-      "hrsh7th/cmp-nvim-lsp",    -- LSP completion source
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",     -- LSP completion source
       "hrsh7th/cmp-buffer",       -- Buffer words completion
       "hrsh7th/cmp-path",         -- File path completion
-      "L3MON4D3/LuaSnip",         -- Snippet engine
+      { "L3MON4D3/LuaSnip", version = "v2.*", submodules = false }, -- Snippet engine
       "saadparwaiz1/cmp_luasnip", -- Snippet completion source
     },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-
-      -- Helper: Check if cursor has text before it (not whitespace/start of line)
-      -- Used to decide whether to trigger completion on Tab
-      local has_words_before = function()
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and
-          vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
-      cmp.setup({
-        completion = {
-          -- autocomplete = false: Don't auto-popup while typing, only on Tab/Ctrl-Space
-          -- This prevents annoying popups and conflicts with Copilot
-          autocomplete = false,
-
-          -- completeopt controls completion behavior:
-          -- - menu: show popup menu
-          -- - menuone: show menu even for single match
-          -- - noinsert: don't auto-insert first match (wait for explicit selection)
-          completeopt = "menu,menuone,noinsert",
-        },
-        snippet = {
-          -- Required: Tell cmp how to expand snippets (using LuaSnip)
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        window = {
-          -- Add borders to completion and documentation windows for better visibility
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
-        },
-        mapping = cmp.mapping.preset.insert({
-          -- Tab: Smart tab behavior with priority chain
-          -- 1. If Copilot suggestion visible -> accept it
-          -- 2. If completion menu visible -> move to next item
-          -- 3. If in snippet with jump points -> jump to next point
-          -- 4. If typing word -> trigger completion
-          -- 5. Otherwise -> normal Tab behavior (indent)
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            local copilot = require("copilot.suggestion")
-            if copilot.is_visible() then
-              copilot.accept()
-            elseif cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.expand_or_locally_jumpable() then
-              -- expand_or_locally_jumpable: only jump within current snippet,
-              -- not to unrelated snippets in the buffer
-              luasnip.expand_or_jump()
-            elseif has_words_before() then
-              cmp.complete()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.locally_jumpable(-1) then
-              -- locally_jumpable: only jump within current snippet
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-
-          -- Ctrl-Space: Manually trigger completion when Tab doesn't
-          ["<C-Space>"] = cmp.mapping.complete(),
-
-          ["<C-e>"] = cmp.mapping.abort(),
-
-          -- select = false: Only confirm if explicitly selected (prevents accidents)
-          -- behavior = Replace: Replace word under cursor instead of inserting
-          ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = false,
-          }),
-
-          ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-d>"] = cmp.mapping.scroll_docs(4),
-        }),
-
-        -- Completion sources with priorities (higher = shown first)
-        -- First group: Primary sources (LSP, snippets, paths)
-        -- Second group: Fallback sources (buffer words)
-        sources = cmp.config.sources({
-          { name = "nvim_lsp", priority = 1000 },  -- LSP completions (highest priority)
-          { name = "luasnip", priority = 750 },    -- Snippet completions
-          { name = "path", priority = 500 },       -- File path completions
-        }, {
-          {
-            name = "buffer",
-            priority = 250,  -- Buffer words (lowest priority)
-            option = {
-              -- Only complete from visible buffers (not all 50 open buffers)
-              -- This keeps completions relevant and fast
-              get_bufnrs = function()
-                local bufs = {}
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                  bufs[vim.api.nvim_win_get_buf(win)] = true
-                end
-                return vim.tbl_keys(bufs)
-              end
-            }
-          },
-        }),
-        formatting = {
-          -- Add labels to show where each completion came from
-          format = function(entry, vim_item)
-            vim_item.menu = ({
-              nvim_lsp = "[LSP]",
-              luasnip = "[Snip]",
-              buffer = "[Buf]",
-              path = "[Path]",
-            })[entry.source.name]
-            return vim_item
-          end,
-        },
-        experimental = {
-          -- ghost_text shows completion as virtual text at cursor
-          -- Disabled to avoid visual conflicts with Copilot's inline suggestions
-          ghost_text = false,
-        },
-      })
-    end,
-  })
-  -- use {
-  --   "olimorris/codecompanion.nvim",
-  --   config = function()
-  --     require("codecompanion").setup()
-  --   end,
-  --   requires = {
-  --     "nvim-lua/plenary.nvim",
-  --     "nvim-treesitter/nvim-treesitter",
-  --   }
-  -- }
-
-
-  -- AVANTE
-  -- Required plugins
-  -- use 'nvim-treesitter/nvim-treesitter'
-  -- use 'stevearc/dressing.nvim'
-  -- use 'nvim-lua/plenary.nvim'
-  -- use 'MunifTanjim/nui.nvim'
-  -- use 'MeanderingProgrammer/render-markdown.nvim'
-
-  -- Optional dependencies
-  -- use 'hrsh7th/nvim-cmp'
-  -- use 'nvim-tree/nvim-web-devicons' -- or use 'echasnovski/mini.icons'
-  -- use 'HakonHarnes/img-clip.nvim' -- embed images into markdown
-  -- use 'zbirenbaum/copilot.lua' -- copilot rewritten in lua
-
-  -- Avante.nvim with build process
-  -- use {
-  --   'yetone/avante.nvim',
-  --   branch = 'main',
-  --   run = 'make',
-  --   config = function()
-  --     require('avante').setup({
-  --       --- @alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
-  --       provider = "copilot",
-  --     })
-  --   end
-  -- }
+    config = function() require("autocomplete").setup() end,
+  },
 
   -- Fuzzy finder
-  -- use {
-  --   'nvim-telescope/telescope.nvim',
-  --   requires = { { 'nvim-lua/plenary.nvim' } },
-  --   cmd = 'Telescope'
-  -- }
-  -- use { 
-  --   'nvim-telescope/telescope-fzf-native.nvim', 
-  --   run = 'make',
-  --   cmd = 'Telescope'
-  -- }
 
-  use { 
-    'ibhagwan/fzf-lua',
-    requires = { 
-      'vijaymarupudi/nvim-fzf',
-      'nvim-tree/nvim-web-devicons' 
-    }
-  }
+  {
+    "ibhagwan/fzf-lua",
+    dependencies = {
+      "vijaymarupudi/nvim-fzf",
+      "nvim-tree/nvim-web-devicons",
+    },
+  },
 
-  use 'dyng/ctrlsf.vim'
+  "dyng/ctrlsf.vim",
 
   -- Key bindings
-  use {
+
+  {
     "folke/which-key.nvim",
     config = function()
       require("which-key").setup {}
-    end
-  }
+    end,
+  },
 
-  -- use { 'LionC/nest.nvim' }
-  use { 
-    'connorgmeehan/nest.nvim', 
-    branch = 'integrations-api'
-  }
+  {
+    "connorgmeehan/nest.nvim",
+    branch = "integrations-api",
+  },
 
   -- Git
-  use {
-    'ruifm/gitlinker.nvim',
-    requires = 'nvim-lua/plenary.nvim',
-  }
 
-  use "tpope/vim-fugitive" -- Git integration
-  use "tpope/vim-rhubarb" -- GitHub integration, enabled GBrowse
-  use "f-person/git-blame.nvim" -- Git blame inline
+  {
+    "ruifm/gitlinker.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+  },
 
-  -- EXPERIMENTS
+  "tpope/vim-fugitive",     -- Git integration
+  "tpope/vim-rhubarb",      -- GitHub integration, enables GBrowse
+  "f-person/git-blame.nvim", -- Git blame inline
 
-  use { 
-    "inkarkat/vim-ExtractMatches", 
-    requires = "inkarkat/vim-ingo-library",
-  }
+  -- LSP
 
-  use {
-    "neovim/nvim-lspconfig"
-  }
+  "neovim/nvim-lspconfig",
 
---   use 'hrsh7th/cmp-nvim-lsp'
---   use 'hrsh7th/cmp-buffer'
---   use 'hrsh7th/cmp-path'
---   use 'hrsh7th/cmp-cmdline'
---   use 'hrsh7th/nvim-cmp'
+  -- Experiments
 
-  use "elzr/vim-json"
+  {
+    "inkarkat/vim-ExtractMatches",
+    dependencies = "inkarkat/vim-ingo-library",
+  },
 
-  -- use "ervandew/supertab"
+  "elzr/vim-json",
 
   -- Outline, :AerialToggle
-  use "stevearc/aerial.nvim"
-  use "nvim-treesitter/nvim-treesitter-context"
+  "stevearc/aerial.nvim",
+  "nvim-treesitter/nvim-treesitter-context",
 
+  -- Colorschemes
+  "rebelot/kanagawa.nvim",
+  "Th3Whit3Wolf/one-nvim",
+  "junegunn/seoul256.vim",
 
-  -- Gruvbox colorsheme fork with Treesitter support
-  -- use { "ellisonleao/gruvbox.nvim", requires = {"rktjmp/lush.nvim"} } 
-  use "rebelot/kanagawa.nvim"
-  use "Th3Whit3Wolf/one-nvim"
-  use "junegunn/seoul256.vim"
-  -- use "morhetz/gruvbox" -- Colorscheme
-  -- use 'RRethy/nvim-base16'
-
---   use { 
---     "metakirby5/codi.vim",
---     cmd = 'Codi'
---   }
-
-  -- VIM DEBUG
-
-  -- use "mfussenegger/nvim-dap"
-  -- use "rcarriga/nvim-dap-ui"
-  -- use "suketa/nvim-dap-ruby"
-  -- use "theHamsta/nvim-dap-virtual-text"
-  -- -- use "puremourning/vimspector"
-
-  -- use "tweekmonster/startuptime.vim"
-  -- use "bfredl/nvim-luadev"
-  -- use "rafcamlet/nvim-luapad"
-end,
-config = {
-  display = {
-    open_fn = require('packer.util').float,
+}, {
+  ui = {
+    border = "rounded",
   },
-}})
-
-
--- Recompile packer when plugins.lua changes
-u.autogroup("packer_user_config", {
-  { "BufWritePost", "plugins.lua", function()
-    vim.cmd("source <afile>")
-    vim.cmd("PackerCompile")
-  end }
 })
-
-return P

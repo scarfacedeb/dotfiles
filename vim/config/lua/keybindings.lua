@@ -146,8 +146,8 @@ M.mappings = {
       }},
 
       { 'l', name = '+LSP', {
-        { 'r', ':LspRestart<CR>', 'Restart LSP' },
-        { 's', ':LspStop<CR>', 'Stop LSP' },
+        { 'r', ':lsp restart<CR>', 'Restart LSP' },
+        { 's', ':lsp stop<CR>', 'Stop LSP' },
       }},
 
       { 'v', name = 'Vim', {
@@ -157,9 +157,9 @@ M.mappings = {
         { 'R', ':source %<CR>', 'Source current file' },
         { 'd', syntax.toggle_dark_mode, 'Toggle dark mode' },
 
-        { 'i', ':PackerInstall<CR>', 'Install packages' },
-        { 'u', ':PackerSync<CR>', 'Update packages' },
-        { 'c', ':PackerClean<CR>', 'Clean packages' },
+        { 'i', ':Lazy install<CR>', 'Install packages' },
+        { 'u', ':Lazy sync<CR>', 'Update packages' },
+        { 'c', ':Lazy clean<CR>', 'Clean packages' },
 
         { 's', ':RestoreSession<CR>', 'Restore session' },
         { 'S', ':DeleteSession<CR>', 'Delete session' },
