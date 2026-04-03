@@ -5,7 +5,12 @@ return {
   "tpope/vim-commentary",       -- Add comments: gcc
   "AndrewRadev/splitjoin.vim",  -- Convert between single line and multi line: gJ, gS
   "junegunn/vim-easy-align",    -- Easy align (ga)
-  "maxbrunsfeld/vim-yankstack", -- Yank ring (<Leader>p to cycle through yank history)
+  {
+    "gbprod/yanky.nvim",        -- Yank ring with post-paste cycling (<Leader>p/<Leader>P)
+    config = function()
+      require("yanky").setup({})
+    end,
+  },
   "tpope/vim-unimpaired",       -- [q, ]q, [Q, ]Q and etc keybindings
   "tpope/vim-eunuch",           -- UNIX shell helpers (mkdir, mv, cp)
 

@@ -23,6 +23,10 @@ nest.applyKeymaps({
   { 'K', 'i<CR><Esc>', 'Break line' },
   { 'Y', 'y$', 'Make Y behave like other capitals' },
 
+  -- yanky: intercept p/P so history is tracked; cycle with <Leader>p/<Leader>P after paste
+  { 'p', '<Plug>(YankyPutAfter)',        'Paste after' },
+  { 'P', '<Plug>(YankyPutBefore)',       'Paste before' },
+
   { mode = 'i', {
     { 'jj', '<ESC>', 'Exit Insert mode' },
   }},
@@ -54,8 +58,8 @@ nest.applyKeymaps({
     { 'O', 'O<Esc>', 'New line above' },
     { 'm', "'", "Go to Mark (')" },
 
-    { 'p', '<Plug>yankstack_substitute_older_paste', '<- Yank ring' },
-    { 'P', '<Plug>yankstack_substitute_newer_paste', '-> Yank ring' },
+    { 'p', '<Plug>(YankyCycleForward)',   '<- Cycle yank history' },
+    { 'P', '<Plug>(YankyCycleBackward)', '-> Cycle yank history' },
 
     { name = '+Buffers', {
       { '<Leader>', ':b!#<CR>', 'Switch to alternative buffer' },
