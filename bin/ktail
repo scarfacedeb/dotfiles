@@ -1,10 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "kafka"
+require "rdkafka"
 require "json"
 require "time"
 require "open3"
+require "securerandom"
+require "logger"
 
 # ------------------------------------------------------------------------
 # ANSI Color Codes for simple highlighting in the terminal
@@ -21,11 +23,11 @@ CYAN   = "\033[36m"
 # ------------------------------------------------------------------------
 $exiting = false
 
-# Trap Ctrl+C (SIGINT) to set $exiting and exit cleanly.
+# Trap Ctrl+C (SIGINT) to set $exiting — no exit here so the main loop
+# can break cleanly before at_exit tears down the port-forward.
 trap("INT") do
   $exiting = true
   puts "\n#{YELLOW}Caught Ctrl+C; shutting down gracefully…#{RESET}"
-  exit 0
 end
 
 # ------------------------------------------------------------------------
@@ -33,7 +35,19 @@ end
 # ------------------------------------------------------------------------
 $log = File.open("kafka.log", "w") if ENV['DEBUG'] == '1'
 
+# Silence rdkafka's internal C-library log noise unless DEBUG is set.
+Rdkafka::Config.logger = ENV['DEBUG'] == '1' ? Logger.new($stderr) : Logger.new(IO::NULL)
+
 KAFKA_BROKERS = ENV.fetch("APP_KAFKA_BROKERS", "localhost:9092")
+
+KAFKA_CONFIG = {
+  "bootstrap.servers" => KAFKA_BROKERS,
+  "group.id" => "ktail-#{SecureRandom.hex(4)}",
+  "auto.offset.reset" => ENV["FROM_BEGINNING"] == "1" ? "earliest" : "latest",
+  "enable.auto.commit" => "false",
+  "session.timeout.ms" => "6000",
+  "socket.timeout.ms" => "2000"
+}
 
 def output(line)
   $log&.puts(line)
@@ -64,7 +78,7 @@ end
 #   - Parse the message, colorize the payload, and log it.
 #
 def print_message(m)
-  value = JSON.parse(m.value)
+  value = JSON.parse(m.payload)
   ts, topic, event, payload = value.values_at("produced_at", "topic", "event_name", "payload")
 
   highlighted_payload = colorize_json(payload)
@@ -77,26 +91,29 @@ rescue StandardError => e
 end
 
 #
-# consume_topic(topic)
-#   - Continuously consume a topic, ignoring EOFError etc. if shutting down.
+# consume_topics(topics)
+#   - Subscribe a single consumer to all topics and process messages.
 #
-def consume_topic(topic)
-  output("#{BLUE}--- Consuming #{topic} ---#{RESET}")
-  kafka = Kafka.new(KAFKA_BROKERS)
-  kafka.each_message(topic: topic, start_from_beginning: ENV["FROM_BEGINNING"] == "1") do |m|
-    print_message(m)
-  end
-rescue EOFError, Kafka::ConnectionError => e
-  if $exiting
-    # Ignore connection/EOF errors if exiting gracefully
-  else
-    output("#{RED}KAFKA ERROR: #{e.class} #{e.message}#{RESET}")
-    retry
+def consume_topics(topics)
+  output("#{BLUE}--- Consuming #{topics.count} topic(s) ---#{RESET}")
+  consumer = Rdkafka::Config.new(KAFKA_CONFIG).consumer
+  consumer.subscribe(*topics)
+
+  loop do
+    break if $exiting
+    message = consumer.poll(500)
+    next if message.nil?
+    print_message(message)
   end
 rescue StandardError => e
   unless $exiting
     output("#{RED}KAFKA ERROR: #{e.class} #{e.message}#{RESET}")
     retry unless $exiting
+  end
+ensure
+  if consumer
+    closer = Thread.new { consumer.close rescue nil }
+    closer.join(2) # wait up to 2s, then abandon
   end
 end
 
@@ -224,8 +241,9 @@ sleep(2)
 
 topics = []
 begin
-  kafka = Kafka.new(KAFKA_BROKERS)
-  topics = kafka.topics.reject { |t| t == "__consumer_offsets" }
+  admin = Rdkafka::Config.new(KAFKA_CONFIG).admin
+  topics = admin.metadata.topics.map { |t| t[:topic_name] }.reject { |t| t.start_with?("__") }
+  admin.close
 rescue StandardError => e
   output("#{RED}KAFKA ERROR (listing topics): #{e.class} #{e.message}#{RESET}")
   exit(1)
@@ -252,9 +270,5 @@ end
 
 output("#{GREEN}--- Started ---#{RESET}")
 
-threads = topics.map do |topic|
-  Thread.new { consume_topic(topic) }
-end
-
-threads.each(&:join)
+consume_topics(topics)
 
