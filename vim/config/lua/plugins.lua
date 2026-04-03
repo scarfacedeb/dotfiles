@@ -45,7 +45,8 @@ local P = packer.startup({function()
   -- Syntax
   use {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate"
+    run = ":TSUpdate",
+    branch = 'main',
   }
 
   use 'MTDL9/vim-log-highlighting'
@@ -61,8 +62,8 @@ local P = packer.startup({function()
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        suggestion = { 
-          enabled = true, 
+        suggestion = {
+          enabled = true,
           auto_trigger = true,
           debounce = 75,
           keymap = {

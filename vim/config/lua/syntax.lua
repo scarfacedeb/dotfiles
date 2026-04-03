@@ -1,10 +1,9 @@
 local M = {}
 
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter").setup({
   ensure_installed = "all", -- "all", "maintained", or custom
-  highlight = { enable = true },
   ignore_install = { "phpdoc" },
-  indent = { enable = true },
+  -- indent = { enable = true },
   incremental_selection = {
     enable = true,
     keymaps = {
