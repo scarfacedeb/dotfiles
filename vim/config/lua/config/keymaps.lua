@@ -1,47 +1,22 @@
-local wk = require('which-key')
 local nest = require('nest')
 local fzf = require("fzf-lua")
 
-local u = require("utils")
 local fuzzy = require("fuzzy")
 local git = require("git")
 local syntax = require("syntax")
 
--- Filetype-specific mappings applied via autocmd on FileType event
-local filetype = {
-  lua = {
-    { mode = 'i', {
-      { '<Tab>', '<Plug>(Luadev-Complete)', 'Autocomplete table field' },
-    }},
-  },
-  ruby = {
-    { prefix = 'cr', name = 'Change ruby', {
-      { 'hs', 'ds"ea:<Esc>f=dW', 'Hash#symbolize_keys' },
-      { 'h=', [[:%s/:\([^ ]*\)\(\s*\)=>/\1:/<CR>]], 'Old => new hash' },
-      { 'tl', 'ysiwba:<Esc>Ilet<Esc>f=dwys${', 'Rspec var = to let()' },
-      { 'ss', "ds'i:<Esc>", 'String to Symbol' },
-      { 'Ss', "ysw'", 'Symbol to string' },
-    }},
-  },
-}
+-- Cmd-line abbreviations
+vim.cmd("cabbr <expr> %% expand('%:p:h')") -- %% → current file dir
+vim.cmd("cabbr <expr> %$ expand('%:t')")   -- %$ → current filename
 
-local function createMappings(ft)
-  nest.applyKeymaps { { buffer = true, filetype[ft] } }
-end
+-- Smarter movement: move by display lines when no count is given, otherwise by actual lines. If count > 5, set a mark before moving.
+vim.cmd("nnoremap <expr> j v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'j' : 'gj'")
+vim.cmd("nnoremap <expr> k v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'k' : 'gk'")
 
-local function defineFiletypeAutocmd(ft)
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = ft,
-    callback = function() createMappings(ft) end,
-  })
-end
-
-nest.enable(require('nest.integrations.whichkey'))
 
 nest.defaults.options = { noremap = false }
 
-vim.cmd("nnoremap <expr> j v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'j' : 'gj'")
-vim.cmd("nnoremap <expr> k v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'k' : 'gk'")
+nest.enable(require('nest.integrations.whichkey'))
 
 nest.applyKeymaps({
   -- { 'j', '<expr>...', 'Visual down' },
@@ -172,8 +147,30 @@ nest.applyKeymaps({
 })
 
 -- Apply filetype-specific mappings
+local filetype = {
+  lua = {
+    { mode = 'i', {
+      { '<Tab>', '<Plug>(Luadev-Complete)', 'Autocomplete table field' },
+    }},
+  },
+  ruby = {
+    { prefix = 'cr', name = 'Change ruby', {
+      { 'hs', 'ds"ea:<Esc>f=dW', 'Hash#symbolize_keys' },
+      { 'h=', [[:%s/:\([^ ]*\)\(\s*\)=>/\1:/<CR>]], 'Old => new hash' },
+      { 'tl', 'ysiwba:<Esc>Ilet<Esc>f=dwys${', 'Rspec var = to let()' },
+      { 'ss', "ds'i:<Esc>", 'String to Symbol' },
+      { 'Ss', "ysw'", 'Symbol to string' },
+    }},
+  },
+}
+
 for ft in pairs(filetype) do
-  defineFiletypeAutocmd(ft)
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = ft,
+    callback = function() 
+      nest.applyKeymaps { { buffer = true, filetype[ft] } }
+    end,
+  })
 end
 
 -- LSP keybindings — applied lazily when an LSP client attaches to a buffer

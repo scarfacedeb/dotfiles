@@ -24,13 +24,9 @@ vim.opt.rtp:prepend(lazypath)
 -- Auto-imports lua/plugins/*.lua — each file returns plugin spec(s)
 require("lazy").setup("plugins", { ui = { border = "rounded" } })
 
-require('config.autocmds')
 require('config.commands')
+require('config.autocmds')
 require('config.keymaps')
-
--- Cmd-line abbreviations
-vim.cmd("cabbr <expr> %% expand('%:p:h')") -- %% → current file dir
-vim.cmd("cabbr <expr> %$ expand('%:t')")   -- %$ → current filename
 
 -- Inspect utility (available in command line as :lua inspect(...))
 function _G.inspect(obj)
