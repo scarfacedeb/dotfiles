@@ -4,7 +4,6 @@
 
 local fzf = require('fzf-lua')
 local fzf_path = require('fzf-lua.path')
-local fzf_config = require('fzf-lua.config')
 
 local M = { actions = {} }
 

@@ -25,6 +25,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins", { ui = { border = "rounded" } })
 
 require('config.autocmds')
+require('config.commands')
 require('config.keymaps')
 
 -- Cmd-line abbreviations

@@ -7,11 +7,6 @@ local fuzzy = require("fuzzy")
 local git = require("git")
 local syntax = require("syntax")
 
--- Toggle relative/absolute line numbers
-vim.api.nvim_create_user_command('NumbersToggle', function()
-  vim.opt.relativenumber = not vim.opt.relativenumber:get()
-end, {})
-
 -- Filetype-specific mappings applied via autocmd on FileType event
 local filetype = {
   lua = {
