@@ -36,7 +36,7 @@ function config()
         -- w = 'Arc',
         -- w = 'Orion',
         w = 'Vivaldi',
-        a = 'kitty',
+        a = 'Ghostty',
         f = 'Finder',
         s = 'Slack',
         -- h = 'Insomnia',
@@ -46,7 +46,7 @@ function config()
         m = 'Spotify',
         -- m = 'Music',
         n = 'Notion',
-        e = 'Visual Studio Code - Insiders',
+        -- e = 'Visual Studio Code - Insiders',
         c = 'ChatGPT',
     }
 
@@ -67,8 +67,8 @@ function config()
     bindSpacesHotkeys()
 
     -- Enable swipe gesture for cursor centering
-    local swipeGesture = require("test")
-    swipeGesture.start()
+    -- local swipeGesture = require("test")
+    -- swipeGesture.start()
 
     hs.hotkey.bind(cmdCtrl, "tab", function()
         hs.hints.windowHints()
