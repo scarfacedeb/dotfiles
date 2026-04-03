@@ -84,6 +84,7 @@ alias cask='brew cask'
 alias service='brew services'
 
 alias be='bundle exec'
+alias rc='bundle exec rails console'
 alias rspec='bundle exec rspec'
 alias grspec='rspec $(git ls-files --modified --others spec)'
 alias cop='bundle exec rubocop -A'
