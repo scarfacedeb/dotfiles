@@ -1,14 +1,7 @@
 return {
   {
     "folke/which-key.nvim",
-    config = function()
-      require("which-key").setup {}
-    end,
-  },
-
-  {
-    "connorgmeehan/nest.nvim",
-    branch = "integrations-api",
+    config = true,
   },
 
   {

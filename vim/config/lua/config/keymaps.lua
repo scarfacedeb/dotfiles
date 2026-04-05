@@ -1,208 +1,185 @@
-local nest = require('nest')
+local wk = require('which-key')
 local fzf = require("fzf-lua")
-
 local fuzzy = require("fuzzy")
 local git = require("git")
-local syntax = require("syntax")
+local ui = require("ui")
 
--- Cmd-line abbreviations
-vim.cmd("cabbr <expr> %% expand('%:p:h')") -- %% → current file dir
-vim.cmd("cabbr <expr> %$ expand('%:t')")   -- %$ → current filename
-
--- Smarter movement: move by display lines when no count is given, otherwise by actual lines. If count > 5, set a mark before moving.
+-- Smarter j/k: display lines when no count; save to jumplist if count > 5
+-- (expr mappings not supported by wk.add, keep as vim.cmd)
 vim.cmd("nnoremap <expr> j v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'j' : 'gj'")
 vim.cmd("nnoremap <expr> k v:count ? (v:count > 5 ? \"m'\" . v:count : '') . 'k' : 'gk'")
 
-
-nest.defaults.options = { noremap = false }
-
-nest.enable(require('nest.integrations.whichkey'))
-
-nest.applyKeymaps({
-  -- { 'j', '<expr>...', 'Visual down' },
-  { 'K', 'i<CR><Esc>', 'Break line' },
-  { 'Y', 'y$', 'Make Y behave like other capitals' },
-
-  -- yanky: intercept p/P so history is tracked; cycle with <Leader>p/<Leader>P after paste
-  { 'p', '<Plug>(YankyPutAfter)',        'Paste after' },
-  { 'P', '<Plug>(YankyPutBefore)',       'Paste before' },
-
-  { mode = 'i', {
-    { 'jj', '<ESC>', 'Exit Insert mode' },
-  }},
-
-  { mode = 'nvi', {
-    { '<C-y>', '"*y', 'External copy' },
-    { '<C-p>', '"*p', 'External paste' },
-  }},
-
-  { '<C-t>', name = '+Tabs', {
-    { 'n', ':tabnext<CR>', '' },
-    { 'p', ':tabprev<CR>', '' },
-    { 'c', ':tabnew<CR>', '' },
-    { 'd', ':tabclose<CR>', '' },
-    { '1', '1gt', '' },
-    { '2', '2gt', '' },
-    { '3', '3gt', '' },
-    { '4', '4gt', '' },
-    { '5', '5gt', '' },
-    { '6', '6gt', '' },
-    { '7', '7gt', '' },
-    { '8', '8gt', '' },
-    { '!', '<C-w>T', '' },
-    { 'z', '<C-w>o', '' },
-  }},
-
-  { '<Leader>', {
-    { 'o', 'o<Esc>', 'New line below' },
-    { 'O', 'O<Esc>', 'New line above' },
-    { 'm', "'", "Go to Mark (')" },
-
-    { 'p', '<Plug>(YankyCycleForward)',   '<- Cycle yank history' },
-    { 'P', '<Plug>(YankyCycleBackward)', '-> Cycle yank history' },
-
-    { name = '+Buffers', {
-      { '<Leader>', ':b!#<CR>', 'Switch to alternative buffer' },
-    }},
-
-    { name = '+Tree', {
-      { 'nt', ':NvimTreeToggle<CR>', 'Toggle file tree' },
-      { 'nf', ':NvimTreeFindFile<CR>', 'Reveal file in tree' },
-    }},
-
-    { name = '+Files', {
-      { 'o', fzf.files, 'Fzf files' },
-      { 'ro', fuzzy.gems, 'Gems' },
-      { 'ra', fuzzy.gems_grep, 'Gems Grep' },
-      { '<C-o>', fzf.git_status, 'Fzf git stage files' },
-      { '<Enter>', fzf.buffers, 'Fzf buffers' },
-      { 'ed', ':e %%<SPACE><BACKSPACE>/', 'Edit in current dir' },
-      { 'ee', fuzzy.ed_files, 'Fzf in current dir' },
-      { 'ep', fuzzy.projects, 'Fzf projects' },
-      { 'eo', fuzzy.projects_files, 'Fzf files in projects' },
-      { 'ea', fuzzy.projects_grep, 'Grep files in projects' },
-    }},
-
-    { name = '+Search and replace', {
-      { 'sr', ':%s/', 'Search in file' },
-      { 'Sr', ':%Subvert/', 'Better search' },
-      { 'sh', fzf.search_history, 'Fzf search history' },
-      { '/w', '/<C-r><C-w>', 'Search word under cursor' },
-      { 'sw', [[:%s/\<<C-r><C-w>\>/]], 'Replace word under cursor' },
-      { 'a', fzf.grep, 'Fzf grep' },
-      { 'A', ':FzfLua grep <C-r><C-w><CR>', 'Fzf grep word under cursor' },
-    }},
-
-    { 'f', name = '+File', {
-      { 'd', ':Unlink<CR>', 'Delete the file' },
-    }},
-
-    { 'y', name = '+Yank', {
-      { 'a', 'ggVGy', 'Yank the whole file' },
-      { 'y', ':let @*=@0<CR>', 'Yank from internal copy register into external register' },
-    }},
-
-    { 'g', name = '+Git', {
-      { 'g', ':!fork open<CR>', 'Fork' },
-      { 'y', git.copy_line_url, 'Copy remote url' },
-      { 'h', fzf.git_bcommits, 'File history' },
-      { 'b', ':Git blame -w -C -C -C<CR>', 'Git blame' },
-      { 'B', ':Git blame<CR>', 'Git blame fast' },
-      { 'H', ':!fork log -- %<CR>', 'Fork file history' },
-      { 'r', ':GBrowse<CR>', 'GBrowse: open file in remote' },
-    }},
-
-    { '=', name = '+Format', {
-      { 'j', ':%!python3 -m json.tool<CR>', 'Format JSON' },
-    }},
-
-    { 'l', name = '+LSP', {
-      { 'r', ':lsp restart<CR>', 'Restart LSP' },
-      { 's', ':lsp stop<CR>', 'Stop LSP' },
-      { 'm', ':Mason<CR>', 'Mason' },
-      { 'h', ':checkhealth lsp<CR>', 'LSP health' },
-    }},
-
-    { 't', name = '+Toggle', {
-      { 'n', ':NumbersToggle<CR>', 'Toggle relative numbers' },
-    }},
-
-    { 'v', name = 'Vim', {
-      { 'e', fuzzy.vim_configs, 'Edit config' },
-      { 'k', ':e ~/.config/nvim/lua/config/keymaps.lua<CR>', 'Edit keybindings' },
-      { 'r', ':source $MYVIMRC<CR>', 'Reload config' },
-      { 'R', ':source %<CR>', 'Source current file' },
-      { 'd', syntax.toggle_dark_mode, 'Toggle dark mode' },
-
-      { 'i', ':Lazy install<CR>', 'Install packages' },
-      { 'u', ':Lazy sync<CR>', 'Update packages' },
-      { 'c', ':Lazy clean<CR>', 'Clean packages' },
-
-      { 's', ':RestoreSession<CR>', 'Restore session' },
-      { 'S', ':DeleteSession<CR>', 'Delete session' },
-
-      { 'L', ':Luadev<CR><C-W>b:set ft=lua<CR>', 'Lua REPL' },
-      { 'l', '<Plug>(Luadev-RunLine)', 'Execute line in REPL' },
-
-      { 'h', fzf.help_tags, 'Help tags' },
-      { 'H', fzf.commands, 'Neovim commands' },
-    }},
-  }},
-})
-
--- Apply filetype-specific mappings
-local filetype = {
-  lua = {
-    { mode = 'i', {
-      { '<Tab>', '<Plug>(Luadev-Complete)', 'Autocomplete table field' },
-    }},
-  },
-  ruby = {
-    { prefix = 'cr', name = 'Change ruby', {
-      { 'hs', 'ds"ea:<Esc>f=dW', 'Hash#symbolize_keys' },
-      { 'h=', [[:%s/:\([^ ]*\)\(\s*\)=>/\1:/<CR>]], 'Old => new hash' },
-      { 'tl', 'ysiwba:<Esc>Ilet<Esc>f=dwys${', 'Rspec var = to let()' },
-      { 'ss', "ds'i:<Esc>", 'String to Symbol' },
-      { 'Ss', "ysw'", 'Symbol to string' },
-    }},
-  },
-}
-
-for ft in pairs(filetype) do
-  vim.api.nvim_create_autocmd("FileType", {
-    pattern = ft,
-    callback = function() 
-      nest.applyKeymaps { { buffer = true, filetype[ft] } }
-    end,
-  })
+-- Tab jump mappings generated by loop
+local tab_jumps = {}
+for i = 1, 8 do
+  table.insert(tab_jumps, { '<C-t>' .. i, i .. 'gt', desc = 'Tab ' .. i, hidden = true })
 end
 
--- LSP keybindings — applied lazily when an LSP client attaches to a buffer
+wk.add(vim.list_extend({
+  -- General
+  { 'K',   'i<CR><Esc>',            desc = 'Break line' },
+  { 'Y',   'y$',                    desc = 'Yank to end of line' },
+  { 'p',   '<Plug>(YankyPutAfter)', desc = 'Paste after' },
+  { 'P',   '<Plug>(YankyPutBefore)',desc = 'Paste before' },
+
+  { mode = 'i', {
+    { 'jj', '<ESC>', desc = 'Exit insert mode' },
+  }},
+
+  { mode = { 'n', 'v', 'i' }, {
+    { '<C-y>', '"*y', desc = 'Copy to system clipboard' },
+    { '<C-p>', '"*p', desc = 'Paste from system clipboard' },
+  }},
+
+  -- Tabs
+  { '<C-t>',  group = 'Tabs' },
+  { '<C-t>n', ':tabnext<CR>',           desc = 'Next tab' },
+  { '<C-t>p', ':tabprev<CR>',           desc = 'Prev tab' },
+  { '<C-t>c', ':tabnew<CR>',            desc = 'New tab' },
+  { '<C-t>d', ':tabclose<CR>',          desc = 'Close tab' },
+  { '<C-t>!', '<C-w>T',                 desc = 'Move window to new tab' },
+  { '<C-t>z', '<C-w>o',                 desc = 'Close other windows' },
+
+  -- Leader: misc
+  { '<leader>O',        'O<Esc>',                       desc = 'New line above' },
+  { '<leader>m',        "'",                             desc = 'Go to mark' },
+
+  -- Yank ring cycling (after paste)
+  { '<leader>p',  '<Plug>(YankyCycleForward)',           desc = '← Yank ring' },
+  { '<leader>P',  '<Plug>(YankyCycleBackward)',          desc = '→ Yank ring' },
+
+  -- Buffers
+  { '<leader><leader>', ':b!#<CR>',                     desc = 'Switch to alt buffer' },
+
+  -- Tree
+  { '<leader>n',  group = 'Tree' },
+  { '<leader>nt', ':NvimTreeToggle<CR>',                 desc = 'Toggle file tree' },
+  { '<leader>nf', ':NvimTreeFindFile<CR>',               desc = 'Reveal file in tree' },
+
+  -- Files / fuzzy find
+  { '<leader>o',      fzf.files,                        desc = 'Find files' },
+  { '<leader><C-o>',  fzf.git_status,                   desc = 'Git staged files' },
+  { '<leader><CR>',   fzf.buffers,                      desc = 'Buffers' },
+
+  -- Ruby/gems shortcuts
+  { '<leader>r',  group = 'Gems' },
+  { '<leader>ro', fuzzy.gems,                            desc = 'Gem files' },
+  { '<leader>ra', fuzzy.gems_grep,                       desc = 'Grep gems' },
+
+  -- Edit/explore
+  { '<leader>e',  group = 'Explore' },
+  { '<leader>ed', ':e %%<SPACE><BACKSPACE>/',      desc = 'Edit in current dir' },
+  { '<leader>ee', fuzzy.ed_files,                  desc = 'Find in current dir' },
+  { '<leader>ep', fuzzy.projects,                  desc = 'Projects' },
+  { '<leader>eo', fuzzy.projects_files,            desc = 'Files in projects' },
+  { '<leader>ea', fuzzy.projects_grep,             desc = 'Grep in projects' },
+
+  -- Search & replace
+  { '<leader>s',  group = 'Search' },
+  { '<leader>sr', ':%s/',                          desc = 'Replace in file' },
+  { '<leader>Sr', ':%Subvert/',                    desc = 'Subvert (case-aware replace)' },
+  { '<leader>sh', fzf.search_history,              desc = 'Search history' },
+  { '<leader>/w', '/<C-r><C-w>',                  desc = 'Search word under cursor' },
+  { '<leader>sw', [[:%s/\<<C-r><C-w>\>/]],        desc = 'Replace word under cursor' },
+  { '<leader>a',  fzf.grep,                        desc = 'Grep' },
+  { '<leader>A',  ':FzfLua grep <C-r><C-w><CR>',  desc = 'Grep word under cursor' },
+
+  -- File operations
+  { '<leader>f',  group = 'File' },
+  { '<leader>fd', ':Unlink<CR>',                   desc = 'Delete file' },
+
+  -- Yank utilities
+  { '<leader>y',  group = 'Yank' },
+  { '<leader>ya', 'ggVGy',                         desc = 'Yank whole file' },
+  { '<leader>yy', ':let @*=@0<CR>',               desc = 'Copy yank reg to clipboard' },
+
+  -- Git
+  { '<leader>g',  group = 'Git' },
+  { '<leader>gg', ':!fork open<CR>',               desc = 'Open Fork' },
+  { '<leader>gy', git.copy_line_url,               desc = 'Copy remote URL' },
+  { '<leader>gh', fzf.git_bcommits,                desc = 'File history' },
+  { '<leader>gb', ':Git blame -w -C -C -C<CR>',   desc = 'Git blame (deep)' },
+  { '<leader>gB', ':Git blame<CR>',                desc = 'Git blame' },
+  { '<leader>gH', ':!fork log -- %<CR>',           desc = 'Fork file history' },
+  { '<leader>gr', ':GBrowse<CR>',                  desc = 'Open in remote' },
+
+  -- Format
+  { '<leader>=',  group = 'Format' },
+  { '<leader>=j', ':%!python3 -m json.tool<CR>',  desc = 'Format JSON' },
+
+  -- LSP management
+  { '<leader>l',  group = 'LSP' },
+  { '<leader>lr', ':lsp restart<CR>',              desc = 'Restart LSP' },
+  { '<leader>ls', ':lsp stop<CR>',                 desc = 'Stop LSP' },
+  { '<leader>lm', ':Mason<CR>',                    desc = 'Mason' },
+  { '<leader>lh', ':checkhealth lsp<CR>',          desc = 'LSP health' },
+
+  -- Vim/config
+  { '<leader>v',  group = 'Vim' },
+  { '<leader>ve', fuzzy.vim_configs,               desc = 'Edit config files' },
+  { '<leader>vk', ':e ~/.config/nvim/lua/config/keymaps.lua<CR>', desc = 'Edit keymaps' },
+  { '<leader>vr', ':source $MYVIMRC<CR>',          desc = 'Reload config' },
+  { '<leader>vR', ':source %<CR>',                 desc = 'Source current file' },
+  { '<leader>vd', ui.toggle_dark_mode,             desc = 'Toggle dark mode' },
+  { '<leader>vi', ':Lazy install<CR>',             desc = 'Install plugins' },
+  { '<leader>vu', ':Lazy sync<CR>',                desc = 'Update plugins' },
+  { '<leader>vc', ':Lazy clean<CR>',               desc = 'Clean plugins' },
+  { '<leader>vs', ':RestoreSession<CR>',           desc = 'Restore session' },
+  { '<leader>vS', ':DeleteSession<CR>',            desc = 'Delete session' },
+  { '<leader>vL', ':Luadev<CR><C-W>b:set ft=lua<CR>', desc = 'Open Lua REPL' },
+  { '<leader>vl', '<Plug>(Luadev-RunLine)',         desc = 'Execute line in REPL' },
+  { '<leader>vh', fzf.help_tags,                   desc = 'Help tags' },
+  { '<leader>vH', fzf.commands,                    desc = 'Neovim commands' },
+
+  -- Show buffer-local keymaps
+  { '<leader>?', function() require("which-key").show({ global = false }) end,
+    desc = 'Buffer local keymaps' },
+}, tab_jumps))
+
+-- Ruby filetype mappings via autocmd (wk `ft` field not supported in this version)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'ruby',
+  callback = function()
+    wk.add({
+      { 'cr',   group = 'Change ruby', buffer = true },
+      { 'crhs', 'ds"ea:<Esc>f=dW',                         buffer = true, remap = true, desc = 'Hash#symbolize_keys' },
+      { 'crh=', [[:%s/:\([^ ]*\)\(\s*\)=>/\1:/<CR>]],      buffer = true, desc = 'Convert => hash to new syntax' },
+      { 'crtl', 'ysiwba:<Esc>Ilet<Esc>f=dwys${',           buffer = true, remap = true, desc = 'Var to let()' },
+      { 'crss', "ds'i:<Esc>",                               buffer = true, remap = true, desc = 'String to symbol' },
+      { 'crSs', "ysw'",                                     buffer = true, remap = true, desc = 'Symbol to string' },
+    })
+  end,
+})
+
+-- Lua filetype: insert-mode Tab completes via Luadev (buffer-local, set via autocmd)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'lua',
+  callback = function()
+    vim.keymap.set('i', '<Tab>', '<Plug>(Luadev-Complete)',
+      { buffer = true, desc = 'Luadev table field completion' })
+  end,
+})
+
+-- LSP buffer-local keymaps — registered when a client attaches
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp_keybindings', { clear = true }),
   callback = function(args)
-    nest.applyKeymaps({
-      { buffer = args.buf, options = { noremap = true, silent = true }, {
-
-        -- Navigation
-        { 'gD', vim.lsp.buf.declaration, 'Go to declaration' },
-        { 'gd', vim.lsp.buf.definition, 'Go to definition (also: <C-]> via tagfunc)' },
-        -- { 'K', vim.lsp.buf.hover, 'Hover' },                           -- default in 0.12
-        -- { 'gi', vim.lsp.buf.implementation, 'Implementation' },        -- use gri (default)
-        -- { 'gr', vim.lsp.buf.references, 'References' },                -- use grr (default)
-        -- { '<Space>rn', vim.lsp.buf.rename, 'Rename' },                 -- use grn (default)
-        -- { '<Space>ca', vim.lsp.buf.code_action, 'Code action' },       -- use gra (default)
-        -- { '<Space>D', vim.lsp.buf.type_definition, 'Type definition' },-- use grt (default)
-
-        -- Actions
-        { '<Space>=f', function() vim.lsp.buf.format({ async = true }) end, 'Format document' },
-
-        -- Diagnostics
-        { '<Space>d', vim.diagnostic.open_float, 'Diagnostic float (also: <C-W>d)' },
-        { '<Space>q', vim.diagnostic.setloclist, 'Diagnostics to loclist' },
-        -- { '[d', function() vim.diagnostic.jump({ count = -1 }) end, 'Prev diagnostic' }, -- default in 0.12
-        -- { ']d', function() vim.diagnostic.jump({ count = 1 }) end, 'Next diagnostic' },  -- default in 0.12
-      }},
+    wk.add({
+      { 'gD',        vim.lsp.buf.declaration,                          buffer = args.buf, desc = 'Go to declaration' },
+      { 'gd',        vim.lsp.buf.definition,                           buffer = args.buf, desc = 'Go to definition' },
+      -- Commented out: covered by Neovim 0.12 defaults
+      -- { 'K',      vim.lsp.buf.hover,            buffer = args.buf, desc = 'Hover' },
+      -- { 'gri',    vim.lsp.buf.implementation,   buffer = args.buf, desc = 'Implementation' },
+      -- { 'grr',    vim.lsp.buf.references,        buffer = args.buf, desc = 'References' },
+      -- { 'grn',    vim.lsp.buf.rename,            buffer = args.buf, desc = 'Rename' },
+      -- { 'gra',    vim.lsp.buf.code_action,       buffer = args.buf, desc = 'Code action' },
+      -- { 'grt',    vim.lsp.buf.type_definition,   buffer = args.buf, desc = 'Type definition' },
+      { '<Space>=f', function() vim.lsp.buf.format({ async = true }) end, buffer = args.buf, desc = 'Format document' },
+      { '<Space>d',  vim.diagnostic.open_float,                        buffer = args.buf, desc = 'Diagnostic float' },
+      { '<Space>q',  vim.diagnostic.setloclist,                         buffer = args.buf, desc = 'Diagnostics to loclist' },
+      -- Commented out: covered by Neovim 0.12 defaults
+      -- { '[d', function() vim.diagnostic.jump({ count = -1 }) end, buffer = args.buf, desc = 'Prev diagnostic' },
+      -- { ']d', function() vim.diagnostic.jump({ count = 1 }) end,  buffer = args.buf, desc = 'Next diagnostic' },
     })
   end,
 })
