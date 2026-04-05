@@ -41,6 +41,30 @@ return {
     end,
   },
 
+  { "folke/which-key.nvim", config = true },
+
+  {
+    "ibhagwan/fzf-lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require('fuzzy') -- setup fzf + register custom helpers (see lua/fuzzy.lua)
+    end,
+  },
+
+  {
+    "rmagatti/auto-session",
+    config = function()
+      require("auto-session").setup({
+        auto_session_enabled = true,
+        auto_save_enabled = true,
+        auto_restore_enabled = false,
+        auto_session_enable_last_session = false,
+        auto_session_suppress_dirs = { "~" },
+        auto_session_root_dir = vim.fn.stdpath('cache') .. "/sessions/",
+      })
+    end,
+  },
+
   -- Colorschemes
   "rebelot/kanagawa.nvim",
   "junegunn/seoul256.vim",
