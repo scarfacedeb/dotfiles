@@ -14,12 +14,12 @@ return {
     dependencies = {
       "mason-org/mason.nvim",
       "neovim/nvim-lspconfig",
-      "hrsh7th/cmp-nvim-lsp",
+      "saghen/blink.cmp",
     },
     config = function()
       -- Set capabilities globally for all LSP servers
       vim.lsp.config('*', {
-        capabilities = require('cmp_nvim_lsp').default_capabilities(),
+        capabilities = require('blink.cmp').get_lsp_capabilities(),
       })
 
       -- Ensure these servers are installed; automatic_enable = true (default)

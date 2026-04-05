@@ -9,22 +9,23 @@ return {
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = false, -- handled manually via Tab in autocomplete
+            accept = false,        -- handled via Tab in autocomplete.lua
+            next = "<M-]>",        -- next suggestion
+            prev = "<M-[>",        -- prev suggestion
+            dismiss = "<C-]>",     -- dismiss
           },
         },
-        panel = { enabled = true },
+        panel = { enabled = false },
       })
     end,
   },
 
   {
-    "hrsh7th/nvim-cmp",
+    "saghen/blink.cmp",
+    version = "1.*",
     dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
       { "L3MON4D3/LuaSnip", version = "v2.*", submodules = false },
-      "saadparwaiz1/cmp_luasnip",
+      "fang2hou/blink-copilot",
     },
     config = function()
       require("autocomplete").setup()
