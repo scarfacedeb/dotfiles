@@ -1,8 +1,10 @@
 return {
   "tpope/vim-repeat",           -- Utility plugin to improve .
-  "tpope/vim-surround",         -- Surround targets: csb, cs", ds{, dsb
+  {
+    "kylechui/nvim-surround",   -- Surround targets: csb, cs", ds{, dsb (replaces vim-surround)
+    config = true,
+  },
   "tpope/vim-abolish",          -- Better find-and-replace: Subvert; camelCase to snake case (crs)
-  "tpope/vim-commentary",       -- Add comments: gcc
   "AndrewRadev/splitjoin.vim",  -- Convert between single line and multi line: gJ, gS
   "junegunn/vim-easy-align",    -- Easy align (ga)
   {
