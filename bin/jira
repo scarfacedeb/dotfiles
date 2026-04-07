@@ -1,0 +1,164 @@
+#!/usr/bin/env zsh
+# Usage: jira [-p PROJECT_KEY] ["rough description"]
+
+set -euo pipefail
+
+COPILOT=(gh copilot --model gpt-5.2)
+DEFAULT_PROJECT="CNL"
+VALID_LABELS='["backend", "frontend", "adhoc", "planned"]'
+
+# ── Argument parsing ──────────────────────────────────────────────────────────
+
+PROJECT="${DEFAULT_PROJECT}"
+EPIC=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p|--project) PROJECT="$2"; shift 2 ;;
+    *) break ;;
+  esac
+done
+
+DESCRIPTION="${1:-}"
+
+if [[ -z "$DESCRIPTION" ]]; then
+  DESCRIPTION=$(gum input --placeholder "Describe the ticket…" --prompt "> ")
+fi
+
+[[ -z "$DESCRIPTION" ]] && { echo "No description provided."; exit 1; }
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+generate_fields() {
+  local desc="$1"
+  $COPILOT -s -p "Analyze this ticket description and output ONLY a raw JSON object (no prose, no markdown fences) with fields:
+- summary (string): concise title
+- description (string): markdown with exactly these sections:
+    ## Goal
+    One sentence on why this ticket exists.
+    ## Requirements
+    Bullet list of what needs to be done.
+    ## Acceptance Criteria
+    Bullet list of conditions that define done.
+- type (string): Bug | Task | Story | Epic
+- priority (string): Highest | High | Medium | Low | Lowest
+- labels (array): applicable subset of ${VALID_LABELS}
+
+Description: \"\"\"${desc}\"\"\""
+}
+
+render_preview() {
+  local json="$1"
+  local summary type priority labels description epic_row
+  summary=$(jq -r '.summary'            <<< "$json")
+  type=$(jq -r '.type'                  <<< "$json")
+  priority=$(jq -r '.priority'          <<< "$json")
+  labels=$(jq -r '.labels | join(", ")' <<< "$json")
+  description=$(jq -r '.description'    <<< "$json")
+  epic_row=""
+  [[ -n "$EPIC" ]] && epic_row="| **Epic**     | ${EPIC}      |"$'\n'
+
+  mdcat <<MARKDOWN
+
+---
+
+## 📋 Ticket Preview
+
+| Field        | Value        |
+|--------------|--------------|
+| **Project**  | ${PROJECT}   |
+${epic_row}| **Type**     | ${type}      |
+| **Priority** | ${priority}  |
+| **Labels**   | ${labels}    |
+| **Summary**  | ${summary}   |
+
+### Description
+
+${description}
+
+---
+MARKDOWN
+}
+
+pick_action() {
+  gum choose \
+    --header="What would you like to do?" \
+    --cursor="> " \
+    --height=6 \
+    --label-delimiter=":" \
+    "1  Confirm & Create:confirm" \
+    "2  Suggest Changes:suggest" \
+    "3  Set Epic:epic" \
+    "4  Cancel:cancel"
+}
+
+create_ticket() {
+  local json="$1"
+  local summary type priority labels_array description epic_line
+  summary=$(jq -r '.summary'       <<< "$json")
+  type=$(jq -r '.type'             <<< "$json")
+  priority=$(jq -r '.priority'     <<< "$json")
+  labels_array=$(jq -c '.labels'   <<< "$json")
+  description=$(jq -r '.description' <<< "$json")
+  epic_line=""
+  [[ -n "$EPIC" ]] && epic_line="Epic:        ${EPIC}"$'\n'
+
+  exec $COPILOT \
+    --allow-tool='atlassian(getJiraProjectIssueTypesMetadata)' \
+    --allow-tool='atlassian(getJiraIssueTypeMetaWithFields)' \
+    --allow-tool='atlassian(createJiraIssue)' \
+    --allow-tool='atlassian(createIssueLink)' \
+    --allow-tool='read' \
+    --add-dir="${HOME}/projects" \
+    --allow-all-paths \
+    -p "Create a Jira ticket on catawiki.atlassian.net (cloudId: d45108a7-eab3-4d35-8669-ae208b36a240).
+
+Call createJiraIssue with these parameters:
+- cloudId: d45108a7-eab3-4d35-8669-ae208b36a240
+- projectKey: ${PROJECT}
+- issueTypeName: ${type}
+- summary: ${summary}
+- description: ${description}
+- additional_fields: { \"priority\": {\"name\": \"${priority}\"}, \"labels\": ${labels_array} }
+
+IMPORTANT: labels must be passed as a JSON array inside additional_fields, e.g. [\"backend\",\"planned\"].
+Reply with only the created ticket URL."
+}
+
+# ── Main loop ─────────────────────────────────────────────────────────────────
+
+while true; do
+  echo ""
+  echo "Generating ticket fields…"
+
+  RAW=$(generate_fields "$DESCRIPTION")
+  JSON=$(jq -e . <<< "$RAW" 2>/dev/null)
+
+  if [[ -z "$JSON" ]]; then
+    echo "Could not parse ticket fields. Raw output:"
+    echo "$RAW"
+    exit 1
+  fi
+
+  render_preview "$JSON"
+
+  case "$(pick_action)" in
+    confirm)
+      echo "Creating ticket in ${PROJECT}…"
+      create_ticket "$JSON"
+      ;;
+    suggest)
+      CHANGES=$(gum input --placeholder "What changes would you like?" --prompt ">  ")
+      echo "Regenerating with your changes…"
+      DESCRIPTION="${DESCRIPTION}"$'\n\n'"Requested changes: ${CHANGES}"
+      ;;
+    epic)
+      EPIC=$(gum input --placeholder "Epic key, e.g. CNL-123" --prompt ">  ")
+      echo "Epic set to ${EPIC}. Refreshing preview…"
+      ;;
+    *)
+      echo "Cancelled."
+      exit 0
+      ;;
+  esac
+done
