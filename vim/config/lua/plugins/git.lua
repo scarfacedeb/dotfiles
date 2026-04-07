@@ -10,4 +10,11 @@ return {
       require('gitlinker').setup({ mappings = nil })
     end,
   },
+
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require('gitsigns').setup()
+    end,
+  },
 }
