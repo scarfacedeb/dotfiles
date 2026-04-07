@@ -131,6 +131,38 @@ wk.add(vim.list_extend({
   { '<leader>vh', fzf.help_tags,                   desc = 'Help tags' },
   { '<leader>vH', fzf.commands,                    desc = 'Neovim commands' },
 
+  { '<leader>yh', function() require('neoclip.fzf')() end, desc = 'Clipboard history' },
+
+  -- Tests (neotest)
+  { '<leader>T',  group = 'Test' },
+  { '<leader>Tn', function() require('neotest').run.run() end,                          desc = 'Run nearest test' },
+  { '<leader>Tf', function() require('neotest').run.run(vim.fn.expand('%')) end,         desc = 'Run file' },
+  { '<leader>Tc', function()
+      -- Run the corresponding spec for the current implementation file
+      -- e.g. app/models/user.rb → spec/models/user_spec.rb
+      local file = vim.fn.expand('%:p')
+      local spec
+      if file:match('_spec%.rb$') then
+        spec = file  -- already a spec file
+      else
+        spec = file
+          :gsub('/app/', '/spec/')
+          :gsub('/lib/', '/spec/lib/')
+          :gsub('%.rb$', '_spec.rb')
+      end
+      if vim.fn.filereadable(spec) == 1 then
+        require('neotest').run.run(spec)
+      else
+        vim.notify('No spec found: ' .. spec, vim.log.levels.WARN)
+      end
+    end, desc = 'Run corresponding spec' },
+  { '<leader>Tl', function() require('neotest').run.run_last() end,                     desc = 'Run last test' },
+  { '<leader>Ts', function() require('neotest').summary.toggle() end,                   desc = 'Toggle summary' },
+  { '<leader>To', function() require('neotest').output_panel.toggle() end,              desc = 'Toggle output' },
+  { '<leader>Tx', function() require('neotest').run.stop() end,                         desc = 'Stop test' },
+  { ']t', function() require('neotest').jump.next({ status = 'failed' }) end,           desc = 'Next failed test' },
+  { '[t', function() require('neotest').jump.prev({ status = 'failed' }) end,           desc = 'Prev failed test' },
+
   -- Show buffer-local keymaps
   { '<leader>?', function() require("which-key").show({ global = false }) end,
     desc = 'Buffer local keymaps' },

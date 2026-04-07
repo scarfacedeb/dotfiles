@@ -126,6 +126,13 @@ return {
     end,
   },
 
+  {
+    "AckslD/nvim-neoclip.lua",
+    config = function()
+      require('neoclip').setup()
+    end,
+  },
+
   -- Colorschemes
   "rebelot/kanagawa.nvim",
   "junegunn/seoul256.vim",
