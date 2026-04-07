@@ -11,11 +11,22 @@ u.autogroup("absolute_numbers", {
   { "InsertEnter",      "*", function() vim.opt_local.relativenumber = false end },
   { "InsertLeave",      "*", function() vim.opt_local.relativenumber = true end },
   { "WinEnter,FocusGained", "*", function()
+    if vim.bo.filetype == "dashboard" then return end
     vim.opt_local.number = true
     vim.opt_local.relativenumber = true
   end },
   { "WinLeave,FocusLost",   "*", function()
+    if vim.bo.filetype == "dashboard" then return end
     vim.opt_local.number = true
     vim.opt_local.relativenumber = false
   end },
+})
+
+-- No line numbers in dashboard
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dashboard",
+  callback = function()
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+  end,
 })

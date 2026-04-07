@@ -1,5 +1,46 @@
 return {
   {
+    "nvimdev/dashboard-nvim",
+    event = "VimEnter",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      local header = {
+        "",
+        "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗  ",
+        "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║  ",
+        "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║  ",
+        "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║  ",
+        "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║  ",
+        "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝  ",
+        "",
+      }
+      local center = {
+        { icon = "  ", key = "f", desc = "Find file",       action = "FzfLua files" },
+        { icon = "  ", key = "r", desc = "Recent files",    action = "FzfLua oldfiles" },
+        { icon = "  ", key = "g", desc = "Grep",            action = "FzfLua grep" },
+        { icon = "  ", key = "s", desc = "Session restore", action = "AutoSession restore" },
+        { icon = "  ", key = "c", desc = "Config",          action = "FzfLua files cwd=~/.config/nvim" },
+        { icon = "󰈆  ", key = "q", desc = "Quit",            action = "qa" },
+      }
+
+      local top_pad = math.max(0, math.floor((vim.o.lines - #header - #center * 2) / 2))
+      local padded_header = vim.deepcopy(header)
+      for _ = 1, top_pad do
+        table.insert(padded_header, 1, "")
+      end
+
+      require("dashboard").setup({
+        theme = "doom",
+        config = {
+          header = padded_header,
+          center = center,
+          footer = {},
+        },
+      })
+    end,
+  },
+
+  {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
