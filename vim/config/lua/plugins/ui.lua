@@ -13,15 +13,27 @@ return {
         "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║  ",
         "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝  ",
         "",
+        "",
       }
       local center = {
+        { icon = "  ", key = "s", desc = "Session restore", action = "AutoSession restore" },
+        { icon = "  ", key = "n", desc = "New file",        action = "enew" },
         { icon = "  ", key = "f", desc = "Find file",       action = "FzfLua files" },
         { icon = "  ", key = "r", desc = "Recent files",    action = "FzfLua oldfiles" },
         { icon = "  ", key = "g", desc = "Grep",            action = "FzfLua grep" },
-        { icon = "  ", key = "s", desc = "Session restore", action = "AutoSession restore" },
+        { icon = "  ", key = "G", desc = "Git status",      action = "Git" },
         { icon = "  ", key = "c", desc = "Config",          action = "FzfLua files cwd=~/.config/nvim" },
         { icon = "󰈆  ", key = "q", desc = "Quit",            action = "qa" },
       }
+
+      -- Pad descriptions to equal width so shortcut keys align
+      local max_len = 0
+      for _, item in ipairs(center) do
+        max_len = math.max(max_len, #item.desc)
+      end
+      for _, item in ipairs(center) do
+        item.desc = item.desc .. string.rep(" ", max_len - #item.desc)
+      end
 
       local top_pad = math.max(0, math.floor((vim.o.lines - #header - #center * 2) / 2))
       local padded_header = vim.deepcopy(header)
@@ -29,12 +41,20 @@ return {
         table.insert(padded_header, 1, "")
       end
 
+      local stats = require("lazy").stats()
+      local version = vim.version()
+      local footer = {
+        "",
+        "  " .. stats.count .. " plugins loaded",
+        "  Neovim v" .. version.major .. "." .. version.minor .. "." .. version.patch,
+      }
+
       require("dashboard").setup({
         theme = "doom",
         config = {
           header = padded_header,
           center = center,
-          footer = {},
+          footer = footer,
         },
       })
     end,
