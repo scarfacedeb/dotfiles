@@ -124,7 +124,7 @@ wk.add(vim.list_extend({
   { '<leader>vi', ':Lazy install<CR>',             desc = 'Install plugins' },
   { '<leader>vu', ':Lazy sync<CR>',                desc = 'Update plugins' },
   { '<leader>vc', ':Lazy clean<CR>',               desc = 'Clean plugins' },
-  { '<leader>vs', ':RestoreSession<CR>',           desc = 'Restore session' },
+  { '<leader>vs', ':AutoSession restore<CR>',      desc = 'Restore session' },
   { '<leader>vS', ':DeleteSession<CR>',            desc = 'Delete session' },
   { '<leader>vL', ':Luadev<CR><C-W>b:set ft=lua<CR>', desc = 'Open Lua REPL' },
   { '<leader>vl', '<Plug>(Luadev-RunLine)',         desc = 'Execute line in REPL' },
