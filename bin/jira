@@ -4,8 +4,11 @@
 set -euo pipefail
 
 COPILOT=(gh copilot --model gpt-5.2)
+PROJECTS_DIR="${HOME}/projects"
 DEFAULT_PROJECT="CNL"
 VALID_LABELS='["backend", "frontend", "adhoc", "planned"]'
+
+cd "${PROJECTS_DIR}"
 
 # ── Argument parsing ──────────────────────────────────────────────────────────
 
@@ -109,7 +112,7 @@ create_ticket() {
     --allow-tool='atlassian(createJiraIssue)' \
     --allow-tool='atlassian(createIssueLink)' \
     --allow-tool='read' \
-    --add-dir="${HOME}/projects" \
+    --add-dir="${PROJECTS_DIR}" \
     --allow-all-paths \
     -p "Create a Jira ticket on catawiki.atlassian.net (cloudId: d45108a7-eab3-4d35-8669-ae208b36a240).
 
@@ -122,6 +125,8 @@ Call createJiraIssue with these parameters:
 - additional_fields: { \"priority\": {\"name\": \"${priority}\"}, \"labels\": ${labels_array} }
 
 IMPORTANT: labels must be passed as a JSON array inside additional_fields, e.g. [\"backend\",\"planned\"].
+Do not run shell commands or connectivity checks. Use the Atlassian tools directly.
+If createJiraIssue fails, report the exact tool error instead of diagnosing network access.
 Reply with only the created ticket URL."
 }
 
