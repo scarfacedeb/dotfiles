@@ -47,7 +47,7 @@ function config()
         -- m = 'Music',
         n = 'Notion',
         -- e = 'Visual Studio Code - Insiders',
-        c = 'ChatGPT',
+        c = 'Codex',
     }
 
     for key, name in pairs(key2App) do
@@ -70,9 +70,9 @@ function config()
     -- local swipeGesture = require("test")
     -- swipeGesture.start()
 
-    hs.hotkey.bind(cmdCtrl, "tab", function()
-        hs.hints.windowHints()
-    end)
+    -- hs.hotkey.bind(cmdCtrl, "tab", function()
+    --     hs.hints.windowHints()
+    -- end)
 end
 
 function bindTilingHotkeys()
