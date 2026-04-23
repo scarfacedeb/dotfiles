@@ -174,3 +174,25 @@ gitexport(){
 ### GITHUB gh
 
 alias gh_pr_open="gh pr view --web"
+
+# Codebase diagnostics (https://piechowski.io/post/git-commands-before-reading-code/)
+# Churn vs bug-clusters and all-time vs recent bus factor shown side by side
+git-audit() {
+  local cols=${COLUMNS:-160}
+
+  echo "\n\033[1;33m━━━ CHURN HOTSPOTS (left)  vs  BUG CLUSTERS (right) ━━━\033[0m"
+  pr -m -t -w "$cols" \
+    <(git log --format=format: --name-only --since="1 year ago" | sort | uniq -c | sort -nr | head -20) \
+    <(git log -i -E --grep="fix|bug|broken" --name-only --format='' | sort | uniq -c | sort -nr | head -20)
+
+  echo "\n\033[1;33m━━━ BUS FACTOR: All-time (left)  vs  Last 6 months (right) ━━━\033[0m"
+  pr -m -t -w "$cols" \
+    <(git shortlog -sn --no-merges) \
+    <(git shortlog -sn --no-merges --since="6 months ago")
+
+  echo "\n\033[1;33m━━━ PROJECT VELOCITY (commits per month) ━━━\033[0m"
+  git log --format='%ad' --date=format:'%Y-%m' | sort | uniq -c
+
+  echo "\n\033[1;33m━━━ FIREFIGHTING (reverts/hotfixes in the last year) ━━━\033[0m"
+  git log --oneline --since="1 year ago" | grep -iE 'revert|hotfix|emergency|rollback' || echo "(none found)"
+}
