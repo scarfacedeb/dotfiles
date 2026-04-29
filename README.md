@@ -4,33 +4,43 @@ Take 4. Work in Progress.
 
 Dotfiles are managed by [dotbot](https://github.com/anishathalye/dotbot).
 
-## Setup
+## Scripts
 
-- Install 1Password.
-- Sign into GitHub.
+| Script | Description |
+|---|---|
+| `./prepare.sh` | Run on the **old machine**. Exports your GPG private key to `~/Desktop/gpg.asc` for transfer. |
+| `./bootstrap.sh` | Run on the **new machine**. Handles SSH key, Homebrew, git-secret, GPG import, secret decryption, deps, and dotfiles install. |
 
-- Generate a new SSH key:
+## Migration: old machine
 
-```
-ssh-keygen -f ~/.ssh/id_rsa
-cat ~/.ssh/id_rsa.pub | pbcopy
-```
-
-- Add the new key on github: https://github.com/settings/ssh/new
-
-- Clone dotfiles and run install
-
-```
-git clone git@github.com:scarfacedeb/dotfiles.git ~/.dotfiles && cd ~/.dotfiles
-./install
+```sh
+./prepare.sh
 ```
 
+Transfer `~/Desktop/gpg.asc` securely to the new machine (AirDrop, 1Password note, etc.).
 
-### Secrets
+---
 
-Git-secrets are used to store some sensitive data. Read [more](https://www.pascallandau.com/blog/git-secret-encrypt-repository-docker/#export-list-and-import-private-gpg-keys).
+## Migration: new machine
 
+1. **Install 1Password** and sign in.
 
-### Fonts
+2. **Clone the dotfiles** (via HTTPS if SSH isn't set up yet):
+
+```sh
+git clone https://github.com/scarfacedeb/dotfiles.git ~/.dotfiles && cd ~/.dotfiles
+```
+
+3. **Drop your exported GPG key** at `~/Desktop/gpg.asc`.
+
+4. **Run bootstrap:**
+
+```sh
+./bootstrap.sh
+```
+
+---
+
+## Fonts
 
 Nerd fonts were downloaded from [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts#patched-fonts).
