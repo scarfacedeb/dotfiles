@@ -6,8 +6,7 @@ brew "cmake"
 brew "gcc"
 brew "readline"
 brew "libyaml"
-brew "openssl@1.1"
-brew "openssl@3"
+brew "openssl"
 
 # CLI tools
 brew "zsh"
@@ -65,15 +64,13 @@ brew "rbspy"
 brew "node"
 brew "nvm"
 brew "go"
-brew "gopls" # Go LSP
 brew "jupyterlab"
 brew "redis"
 brew "detect-secrets"
 brew "pre-commit"
-brew "opencode"
-cask "zed"
 
-brew "neovim", args: ["HEAD"]
+brew "neovim"
+cask "zed"
 
 cask "ghostty"
 cask "fork"
@@ -114,7 +111,6 @@ cask "readdle-spark"
 cask "miro"
 cask "proxyman"
 cask "notion"
-cask "terminal-notifier"
 cask "orion"
 cask "vivaldi"
 
@@ -125,5 +121,6 @@ cask "chatgpt"
 cask "codex"
 
 ## CLI
+brew "opencode"
 cask "claude-code"
 brew "gemini-cli"
