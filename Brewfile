@@ -1,5 +1,3 @@
-tap "homebrew/services"
-
 # Build deps
 brew "autoconf"
 brew "automake"
@@ -92,15 +90,12 @@ brew "docker-completion"
 brew "docker-credential-helper"
 brew "kubernetes-cli"
 brew "kubectx"
-brew "kubectl-buildkit"
 brew "kubeshark"
 brew "k9s"
 brew "helm"
 brew "lima"
 brew "lazydocker"
 brew "tilt"
-cask "google-cloud-sdk"
-# brew "hyperkit"
 
 # Misc Apps
 
@@ -132,4 +127,3 @@ cask "codex"
 ## CLI
 cask "claude-code"
 brew "gemini-cli"
-brew "github-copilot"
