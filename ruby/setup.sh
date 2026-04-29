@@ -3,22 +3,21 @@
 # Install version manager
 brew install chruby ruby-install
 
-VERSIONS="2.7.7 3.2.0"
-DEFAULT_GEMS="solargraph solargraph-rails:1.0.0.pre.1 rubocop rubocop-rspec rubocop-performance rubocop-rails"
+# Fetch the latest stable Ruby version
+ruby-install --update > /dev/null
+LATEST_VERSION=$(ruby-install | awk '/  ruby:/{found=1; next} found{print $1; exit}')
 
-for version in $VERSIONS; do 
-  echo "Installing Ruby $version"
-  ruby-install --cleanup --no-reinstall $version
+SCRIPT_DIR=${0:a:h}
+echo "ruby-$LATEST_VERSION" > "$SCRIPT_DIR/ruby-version"
 
-  touch ~/.gem/ruby/$version/gems/.lsp_ruby_root
-  . $BREW_PREFIX/opt/chruby/share/chruby/chruby.sh
-  chruby $version
+DEFAULT_GEMS="rubocop rubocop-rspec rubocop-performance rubocop-rails"
 
-  echo "Installing default gems for $version"
-  gem install --conservative $DEFAULT_GEMS
+echo "Installing Ruby $LATEST_VERSION"
+ruby-install --cleanup --no-reinstall ruby $LATEST_VERSION
 
-  echo "Setting up Ruby LSP for $version"
-  solargraph download-core
-  yard gems > /dev/null
-done
+. $BREW_PREFIX/opt/chruby/share/chruby/chruby.sh
+chruby $LATEST_VERSION
+
+echo "Installing default gems for $LATEST_VERSION"
+gem install --conservative $DEFAULT_GEMS
 
