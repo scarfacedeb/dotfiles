@@ -77,10 +77,30 @@ end
 # print_message(m)
 #   - Parse the message, colorize the payload, and log it.
 #
+#
+# truncate_depth(obj, max_depth, depth = 0)
+#   - Recursively truncate a Hash/Array beyond max_depth levels.
+#
+def truncate_depth(obj, max_depth, depth = 0)
+  case obj
+  when Hash
+    return "{…}" if depth >= max_depth
+    obj.transform_values { |v| truncate_depth(v, max_depth, depth + 1) }
+  when Array
+    return "[…]" if depth >= max_depth
+    # Collapse arrays whose elements would be truncated complex objects
+    return "[…]" if obj.any? { |v| (v.is_a?(Hash) || v.is_a?(Array)) && depth + 1 >= max_depth }
+    obj.map { |v| truncate_depth(v, max_depth, depth + 1) }
+  else
+    obj
+  end
+end
+
 def print_message(m)
   value = JSON.parse(m.payload)
   ts, topic, event, payload = value.values_at("produced_at", "topic", "event_name", "payload")
 
+  payload = truncate_depth(payload, $max_level) if payload.is_a?(Hash) || payload.is_a?(Array)
   highlighted_payload = colorize_json(payload)
 
   line = "#{CYAN}#{ts}#{RESET} #{YELLOW}#{topic}/#{event}#{RESET}\n" \
@@ -91,10 +111,21 @@ rescue StandardError => e
 end
 
 #
-# consume_topics(topics)
+# compile_patterns(patterns)
+#   - Compile an array of pattern strings into Regexp objects.
+#
+def compile_patterns(patterns)
+  patterns.map { |p| Regexp.new(p) }
+rescue RegexpError => e
+  output("#{RED}Invalid regex pattern: #{e.message}#{RESET}")
+  exit(1)
+end
+
+#
+# consume_topics(topics, ignore_patterns: [])
 #   - Subscribe a single consumer to all topics and process messages.
 #
-def consume_topics(topics)
+def consume_topics(topics, ignore_patterns: [])
   output("#{BLUE}--- Consuming #{topics.count} topic(s) ---#{RESET}")
   consumer = Rdkafka::Config.new(KAFKA_CONFIG).consumer
   consumer.subscribe(*topics)
@@ -103,6 +134,7 @@ def consume_topics(topics)
     break if $exiting
     message = consumer.poll(500)
     next if message.nil?
+    next if ignore_patterns.any? { |pat| pat.match?(message.payload) }
     print_message(message)
   end
 rescue StandardError => e
@@ -178,10 +210,20 @@ OptionParser.new do |opts|
     options[:topic_patterns] ||= []
     options[:topic_patterns] << pattern
   end
+
+  opts.on("-i", "--ignore REGEXP", "Ignore messages matching regex (can specify multiple times)") do |pattern|
+    options[:ignore_patterns] ||= []
+    options[:ignore_patterns] << pattern
+  end
+
+  opts.on("--level N", Integer, "Max payload nesting depth to display (default: 2)") do |n|
+    options[:level] = n
+  end
 end.parse!
 
 force_selection = options[:force_selection] || false
 specified_namespace = options[:namespace]
+$max_level = options.fetch(:level, 2)
 
 services_raw = `kubectl get svc --all-namespaces -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name --no-headers`
 lines = services_raw.strip.lines.map(&:strip)
@@ -253,7 +295,7 @@ end
 topic_patterns = options[:topic_patterns]
 if topic_patterns && !topic_patterns.empty?
   begin
-    patterns = topic_patterns.map { |p| Regexp.new(p) }
+    patterns = compile_patterns(topic_patterns)
     topics = topics.select { |topic| patterns.any? { |pattern| pattern.match?(topic) } }
 
     if topics.empty?
@@ -268,7 +310,14 @@ if topic_patterns && !topic_patterns.empty?
   end
 end
 
+# Compile ignore patterns if provided
+ignore_patterns = []
+if options[:ignore_patterns] && !options[:ignore_patterns].empty?
+  ignore_patterns = compile_patterns(options[:ignore_patterns])
+  output("#{YELLOW}Ignoring messages matching: #{options[:ignore_patterns].join(', ')}#{RESET}")
+end
+
 output("#{GREEN}--- Started ---#{RESET}")
 
-consume_topics(topics)
+consume_topics(topics, ignore_patterns: ignore_patterns)
 
