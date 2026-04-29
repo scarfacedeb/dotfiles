@@ -46,8 +46,8 @@ zplug load
 
 # Add version managers
 # . /usr/local/opt/asdf/libexec/asdf.sh
-. $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh
-. $HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh
+. /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+. /opt/homebrew/opt/chruby/share/chruby/auto.sh
 
 # Add FZF
 [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
