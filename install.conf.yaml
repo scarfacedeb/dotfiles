@@ -28,6 +28,8 @@
 
     ~/.hammerspoon: macos/hammerspoon
 
+    ~/.dotfiles/bin/nginx_tail: cw/bin/nginx_tail
+
 - create:
     - ~/.git-templates
     - ~/.cache/nvim/sessions

@@ -7,3 +7,4 @@ zsh/zsh.d/catawiki.zsh
 cw/aliases.sh
 cw/setup.sh
 cw/bin/brian
+cw/bin/nginx_tail
