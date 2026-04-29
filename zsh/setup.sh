@@ -9,5 +9,7 @@ echo "Installing zplug deps"
 . ~/.zplug/init.zsh
 zplug install
 
-echo "Installing fzf"
-$(brew --prefix)/opt/fzf/install --all
+if [ ! -f ~/.fzf.zsh ]; then
+  echo "Installing fzf"
+  $(brew --prefix)/opt/fzf/install --all
+fi
