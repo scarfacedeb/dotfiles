@@ -7,6 +7,7 @@ require "time"
 require "open3"
 require "securerandom"
 require "logger"
+require "socket"
 
 # ------------------------------------------------------------------------
 # ANSI Color Codes for simple highlighting in the terminal
@@ -190,6 +191,14 @@ def select_namespace_with_fzf(kafka_svcs, current_namespace)
   end
 end
 
+def local_port_open?(host, port, connect_timeout: 1)
+  socket = Socket.tcp(host, port, connect_timeout: connect_timeout)
+  socket.close
+  true
+rescue StandardError
+  false
+end
+
 # ------------------------------------------------------------------------
 # Main Logic Starts Here
 # ------------------------------------------------------------------------
@@ -261,11 +270,21 @@ else
   end
 end
 
-port_forward_pid = spawn(
-  "kubectl", "port-forward", "service/kafka-service", "9092:9092",
-  "-n", selected_ns,
-  out: "/dev/null", err: "/dev/null"
-)
+port_forward_pid = nil
+broker_host, broker_port = KAFKA_BROKERS.split(":", 2)
+broker_port = broker_port.to_i
+
+if %w[localhost 127.0.0.1].include?(broker_host) && local_port_open?(broker_host, broker_port)
+  output("#{GREEN}Reusing existing Kafka tunnel at #{KAFKA_BROKERS}#{RESET}")
+else
+  port_forward_pid = spawn(
+    "kubectl", "port-forward", "service/kafka-service", "9092:9092",
+    "-n", selected_ns,
+    out: "/dev/null", err: "/dev/null"
+  )
+
+  sleep(2)
+end
 
 at_exit do
   if port_forward_pid
@@ -278,8 +297,6 @@ at_exit do
     end
   end
 end
-
-sleep(2)
 
 topics = []
 begin
@@ -320,4 +337,3 @@ end
 output("#{GREEN}--- Started ---#{RESET}")
 
 consume_topics(topics, ignore_patterns: ignore_patterns)
-
