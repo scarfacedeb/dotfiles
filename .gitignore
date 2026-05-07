@@ -6,5 +6,6 @@ zsh/zsh.d/git.zsh
 zsh/zsh.d/catawiki.zsh
 cw/aliases.sh
 cw/setup.sh
+cw/projects_sync.sh
 cw/bin/brian
 cw/bin/nginx_tail
