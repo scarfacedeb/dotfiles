@@ -84,6 +84,7 @@ alias cask='brew cask'
 alias service='brew services'
 
 alias be='bundle exec'
+alias r='bundle exec rails'
 alias rc='bundle exec rails console'
 alias rspec='bundle exec rspec'
 alias grspec='rspec $(git ls-files --modified --others spec)'
@@ -282,6 +283,39 @@ rb() {
 # echo $PATH | split_by :
 split_by() {
   ruby -e "puts STDIN.read.split('$1')"
+}
+
+lf() {
+  local dir="${1:-$HOME/Desktop}"
+  local latest_file
+
+  [[ -d "$dir" ]] || {
+    print -u2 "lf: not a directory: $dir"
+    return 1
+  }
+
+  latest_file=$(
+    find "$dir" -maxdepth 1 \( -type f -o -type l \) -print0 2>/dev/null |
+      xargs -0 stat -f '%m %N' 2>/dev/null |
+      sort -nr |
+      head -n 1 |
+      cut -d' ' -f2-
+  )
+
+  [[ -n "$latest_file" ]] || {
+    print -u2 "lf: no files found in $dir"
+    return 1
+  }
+
+  printf '%s\n' "$latest_file"
+}
+
+lfcopy() {
+  cat "$(lf "$@")" | pbcopy
+}
+
+lffilecopy() {
+  pbfile "$(lf "$@")"
 }
 
 
