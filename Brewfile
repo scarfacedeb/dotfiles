@@ -104,7 +104,6 @@ cask "coconutbattery"
 cask "hammerspoon"
 cask "iina"
 cask "telegram"
-cask "transmission"
 cask "typora"
 cask "spotify"
 cask "readdle-spark"
@@ -119,8 +118,7 @@ cask "vivaldi"
 ## Apps
 cask "chatgpt"
 cask "codex"
-
-## CLI
+cask "codex-app"
 brew "opencode"
 cask "claude-code"
 brew "gemini-cli"
