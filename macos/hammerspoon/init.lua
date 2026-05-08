@@ -14,6 +14,7 @@ local ctrl                         = { "ctrl" }
 local cmdCtrl                      = { "cmd", "ctrl" }
 local openmash                     = { "alt" }
 local alt                          = { "alt" }
+local altShift                     = { "alt", "shift" }
 
 hs.window.animationDuration        = 0
 -- hs.application.enableSpotlightForNameSearches(true)
@@ -31,27 +32,28 @@ hs.alert.defaultStyle.textColor    = { white = 0, alpha = 0.75 }
 
 function config()
     -- Open apps
-    local key2App = {
-        -- w = 'Microsoft Edge',
-        -- w = 'Arc',
-        -- w = 'Orion',
-        w = 'Vivaldi',
-        a = 'Ghostty',
-        f = 'Finder',
-        s = 'Slack',
-        -- h = 'Insomnia',
-        i = 'Spark Desktop',
-        t = 'Telegram',
-        x = 'Fork',
-        m = 'Spotify',
-        -- m = 'Music',
-        n = 'Notion',
-        -- e = 'Visual Studio Code - Insiders',
-        c = 'Codex',
+    local appHotkeys = {
+        -- { key = 'w', app = 'Microsoft Edge' },
+        -- { key = 'w', app = 'Arc' },
+        -- { key = 'w', app = 'Orion' },
+        { key = 'w', app = 'Vivaldi' },
+        { key = 'a', app = 'Ghostty' },
+        { key = 'f', app = 'Finder' },
+        { key = 's', app = 'Slack' },
+        -- { key = 'h', app = 'Insomnia' },
+        { key = 'i', app = 'Spark Desktop' },
+        { key = 't', app = 'Telegram' },
+        { key = 'x', app = 'Fork' },
+        { key = 'm', app = 'Spotify' },
+        -- { key = 'm', app = 'Music' },
+        { key = 'n', app = 'Notion' },
+        -- { key = 'e', app = 'Visual Studio Code - Insiders' },
+        { key = 'c', app = 'Codex' },
+        { key = 'c', mods = altShift, app = 'ChatGPT' },
     }
 
-    for key, name in pairs(key2App) do
-        hs.hotkey.bind(openmash, key, apps.launchOrFocusWin(name))
+    for _, hotkey in ipairs(appHotkeys) do
+        hs.hotkey.bind(hotkey.mods or openmash, hotkey.key, apps.launchOrFocusWin(hotkey.app))
     end
 
     hs.hotkey.bind(openmash, ',', apps.launchOrFocusWin('System Preferences'))
