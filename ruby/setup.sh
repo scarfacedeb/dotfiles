@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+#set -e
+#set -o pipefail
+
 # Install version manager
 brew install chruby ruby-install
 
