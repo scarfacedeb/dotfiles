@@ -9,3 +9,4 @@ cw/setup.sh
 cw/projects_sync.sh
 cw/bin/brian
 cw/bin/nginx_tail
+bin/nginx_tail
