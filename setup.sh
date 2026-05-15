@@ -22,7 +22,7 @@ if ! command -v brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# ── git-secret (needed before ./install) ─────────────────────────────────────
+# ── git-secret ────────────────────────────────────────────────────────────────
 if ! command -v git-secret &>/dev/null; then
   echo "Installing git-secret..."
   brew install git-secret
@@ -46,7 +46,16 @@ git secret reveal -f
 echo "Installing Homebrew dependencies..."
 brew bundle
 
-# ── Dotfiles install ──────────────────────────────────────────────────────────
-echo "Running dotfiles install..."
+# ── Dotfiles ──────────────────────────────────────────────────────────────────
+echo "Linking dotfiles..."
 cd "$DOTFILES_DIR"
-./install
+./symlinks.sh
+
+echo "Running shell setup..."
+./zsh/setup.sh
+
+echo "Running Ruby setup..."
+./ruby/setup.sh
+
+echo "Running Catawiki setup..."
+./cw/setup.sh

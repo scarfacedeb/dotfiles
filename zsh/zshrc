@@ -29,11 +29,6 @@ zplug "paulirish/git-open", as:plugin
 
 # zplug "postmodern/chruby", use:""
 
-# FZF for history and directories
-# zplug "junegunn/fzf", as:command, \
-#   hook-build:"./install --bin", \
-#   use:"bin/{fzf-tmux,fzf}"
-
 # # # Actually install plugins, prompt user input # 0.2
 # if ! zplug check --verbose; then
 #     printf "Install zplug plugins? [y/N]: "
