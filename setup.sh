@@ -46,6 +46,12 @@ git secret reveal -f
 echo "Installing Homebrew dependencies..."
 brew bundle
 
+# ── uv ───────────────────────────────────────────────────────────────────────
+if ! command -v uv &>/dev/null && [ ! -x "$HOME/.local/bin/uv" ]; then
+  echo "Installing uv..."
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
+
 # ── Dotfiles ──────────────────────────────────────────────────────────────────
 echo "Linking dotfiles..."
 cd "$DOTFILES_DIR"

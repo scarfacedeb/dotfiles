@@ -60,7 +60,7 @@ export HISTIGNORE="feedback"
 
 # ========== Dev ============
 
-export PATH="$HOME/.dotfiles/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH="$HOME/.dotfiles/bin:$HOME/.local/bin:$PATH"
 
 typeset -U PATH # remove duplicate entries
 
